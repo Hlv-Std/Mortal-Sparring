@@ -15,6 +15,7 @@ public class GameWindow extends JFrame implements KeyListener {
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        addKeyListener(this);
 
         initComponents();
         loadLayout();
