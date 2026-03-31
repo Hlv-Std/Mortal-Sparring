@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 
 public class GamePanel extends JPanel implements KeyListener {
     private final int FPS = 60;
-    private final double GRAVITY = 1f;
+    private final double GRAVITY = 1.5f;
     private final double FRICTION = 0.5f;
     private final double MAX_FALL = 20f;
     private final double MAX_SPEED = 20f;
@@ -27,8 +27,13 @@ public class GamePanel extends JPanel implements KeyListener {
         BOUNDX = width;
         BOUNDY = HEIGHT;
         GROUND = (double) height - 20f;
+
         addKeyListener(this);
-        final int delay = 10 / FPS;
+        setFocusable(true);
+        requestFocusInWindow();
+
+        // TODO: Recalculate these values
+        final int delay = 1000 / FPS;
         double dt = (double) 10 / FPS;
         t = new Timer(delay, (e) -> {
             if (!player1.isInAir())
@@ -48,6 +53,7 @@ public class GamePanel extends JPanel implements KeyListener {
             }
         });
         t.start();
+        player1.loadKeyCombo();
     }
 
     @Override
@@ -67,7 +73,11 @@ public class GamePanel extends JPanel implements KeyListener {
             // Position
             g2.drawRect((int) player1.x, (int) player1.y, 1, 1);
             // Hitbox
-            // g2.drawRect((int) (player1.x - player1.hitbox.x), (int) (player1.y - player1.hitbox.y), (int) player1.hitbox.x, (int) player1.hitbox.y);
+            g2.drawRect(
+                    (int) (player1.x - (player1.hitbox.x / 2)),
+                    (int) (player1.y - player1.hitbox.y),
+                    (int) player1.hitbox.x,
+                    (int) player1.hitbox.y);
             // Ground
             g2.drawLine(0, (int) GROUND, BOUNDX, (int) GROUND);
         }
@@ -79,12 +89,7 @@ public class GamePanel extends JPanel implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        switch (e.getKeyCode()){
-            case KeyEvent.VK_W -> player1.jump();
-            case KeyEvent.VK_A -> player1.left();
-            case KeyEvent.VK_D -> player1.right();
-            case KeyEvent.VK_S -> player1.duck();
-        }
+        player1.addKeyCombo(e.getKeyCode());
     }
 
     @Override
