@@ -56,8 +56,20 @@ public class GamePanel extends JPanel implements KeyListener {
         g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         for (BufferedImage frame : player1.getFrames(player1.getAnimationState())){
-            Image scaledFrame = frame.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-            g2.drawImage(scaledFrame, (int) player1.x, (int) player1.y, null);
+            Image scaledFrame = frame.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+            // Sprite
+            g2.drawImage(
+                    scaledFrame,
+                    (int) (player1.x - (player1.hitbox.x / 2)),
+                    (int) (player1.y - player1.hitbox.y),
+                    null);
+            g2.setColor(Color.BLUE);
+            // Position
+            g2.drawRect((int) player1.x, (int) player1.y, 1, 1);
+            // Hitbox
+            // g2.drawRect((int) (player1.x - player1.hitbox.x), (int) (player1.y - player1.hitbox.y), (int) player1.hitbox.x, (int) player1.hitbox.y);
+            // Ground
+            g2.drawLine(0, (int) GROUND, BOUNDX, (int) GROUND);
         }
         repaint();
     }
