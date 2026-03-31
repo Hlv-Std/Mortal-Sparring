@@ -8,13 +8,12 @@ import java.util.List;
 public class Player {
     private String name;
     public double x,y;
+    public double velX, velY;
+    private boolean isInAir, isFalling, isDucking;
+    public Vector2 hitbox;
+
     private String animationState;
     private HashMap<String, List<BufferedImage>> animations;
-    public double velX;
-    public double velY;
-    private boolean isInAir;
-    private boolean isFalling;
-    private boolean isDucking;
 
     public Player(String name){
         super();
