@@ -35,13 +35,13 @@ public class Player {
 
     public void jump(){
         if (!isInAir){
-            velY = -20f;
+            velY = -7f;
             isInAir = true;
         }
     }
     public void duck(){
         if (isInAir){
-            velY = 40f;
+            velY = 7f;
         }
     }
     public void left(){ velX = -20f; }
