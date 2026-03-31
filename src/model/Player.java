@@ -20,6 +20,7 @@ public class Player {
         this.name = name;
         velX = 0;
         velY = 0;
+        hitbox = new Vector2(100, 100);
         animationState = PlayerAnimationState.IDLE;
         animations = new HashMap<>();
         // Set up player animations
