@@ -1,14 +1,24 @@
 # Mortal-Sparring
 
-A mortal kombact clone made as a school project
+A mortal kombat clone made as a school project
 
 # Roadmap
 - [ ] Player movement
-- [ ] Smooth player movement
+    - [ ] Short jump and high jump
+    - [ ] Latency-free input
+    - [ ] Improve Gravity and Friction values to be consistent with the game
+    - [ ] Implement Hitboxes
+        - [ ] Damage hitboxes
+        - [ ] Player hitboxes
+    - [ ] Player moveset
 - [ ] Backgrounds
+    - [ ] Animated backgrounds
+    - [ ] Cromatic abberrations
 - [ ] Animations
-- [ ] Main menu
+    - [ ] Animation cancel
 - [ ] Second player
+- [ ] Main menu
+- [ ] Music
 - [ ] Controller support
 
 
