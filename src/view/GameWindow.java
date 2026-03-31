@@ -4,12 +4,9 @@ import controller.PlayerLoader;
 import model.Player;
 
 import javax.swing.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.WindowEvent;
 import java.nio.file.Path;
 
-public class GameWindow extends JFrame implements KeyListener {
+public class GameWindow extends JFrame {
     private static final int DEF_WIDTH = 500;
     private static final int DEF_HEIGHT = 400;
 
@@ -23,7 +20,6 @@ public class GameWindow extends JFrame implements KeyListener {
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        addKeyListener(this);
 
         initComponents();
         loadLayout();
@@ -39,24 +35,10 @@ public class GameWindow extends JFrame implements KeyListener {
         player1.x = (double) getWidth() /2;
         player1.y = (double) getHeight() /2;
 
-        gamePanel = new GamePanel(player1);
+        gamePanel = new GamePanel(player1, getWidth(), getHeight());
         setContentPane(gamePanel);
+        addKeyListener(gamePanel);
     }
 
-    private void loadLayout(){
-
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {}
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        switch(e.getKeyCode()){
-            case KeyEvent.VK_Q -> dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-        }
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {}
+    private void loadLayout(){}
 }
