@@ -5,8 +5,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Player extends Vector2{
+public class Player {
     private String name;
+    public double x,y;
     private String animationState;
     private HashMap<String, List<BufferedImage>> animations;
     public double velX;
