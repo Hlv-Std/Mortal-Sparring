@@ -9,58 +9,56 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 
 public class GamePanel extends JPanel implements KeyListener {
-    private final int FPS = 60;
-    private final double GRAVITY = 2f;
-    private final double FRICTION = 0.8f;
-    private final double MAX_FALL = 20f;
-    private final double MAX_SPEED = 20f;
-    private int BOUNDX;
-    private int BOUNDY;
-    private double GROUND;
+    private final double MAX_SPEED = 80;
+    private final int WIDTH;
+    private final int HEIGHT;
+    private final double GROUND;
 
-    private Player player1;
     private Graphics2D g2;
+    private Player player1;
+    private Player player2;
 
     public GamePanel(Player player1, int width, int height){
         this.player1 = player1;
-        BOUNDX = width;
-        BOUNDY = HEIGHT;
-        GROUND = (double) height - 20f;
+        this.WIDTH = width;
+        this.HEIGHT = height;
+        GROUND = (double) HEIGHT - 20;
 
         addKeyListener(this);
         setFocusable(true);
         requestFocusInWindow();
 
-        // dt = 1/FPS
-        double dt = (double) 1 / FPS;
-        Thread t = new Thread(() -> {
-            while(true){
-                if (!player1.isInAir())
-                    player1.velX *= FRICTION;
-                player1.velX = Math.clamp(player1.velX, -MAX_SPEED, MAX_SPEED);
-
-                player1.velY += GRAVITY * dt;
-                player1.velY = Math.min(player1.velY, MAX_FALL);
-
-                player1.x += player1.velX * dt;
-                player1.y += player1.velY * dt;
-
-                if (player1.y >= GROUND){
-                    player1.y = GROUND;
-                    player1.velY = 0;
-                    player1.setInAir(false);
-                }
-
-                try {
-                    Thread.sleep((long) (dt * 100));
-                } catch (InterruptedException e) {
-                    // TODO: Handle error
-                    e.printStackTrace();
-                }
+        // TODO: We simplify the logic by using basic movement. We do not need full physics
+        double dt = (double) 1 / 60; // 60 FPS
+        Timer t = new Timer(1000 / 60, (e) -> {
+            player1.velY += 40 * dt;
+            player1.x += player1.velX * dt;
+            player1.y += player1.velY * dt;
+            if (player1.y >= GROUND){
+                player1.y = GROUND;
+                player1.velY = 0;
+                player1.setInAir(false);
             }
+            updatePlayers();
         });
         t.start();
         player1.loadKeyCombo();
+    }
+
+    private void updatePlayers(){
+        // Chech position
+        if (player1.y == GROUND){
+            player1.setInAir(false);
+            player1.setFalling(false);
+            player1.resetJumps();
+        } else if (player1.isInAir() && player1.velY > 0){
+            player1.setFalling(true);
+        } else {
+            player1.setInAir(true);
+            player1.setFalling(false);
+        }
+
+        // TODO: Player 2
     }
 
     @Override
@@ -86,7 +84,7 @@ public class GamePanel extends JPanel implements KeyListener {
                     (int) player1.hitbox.x,
                     (int) player1.hitbox.y);
             // Ground
-            g2.drawLine(0, (int) GROUND, BOUNDX, (int) GROUND);
+            g2.drawLine(0, (int) GROUND, WIDTH, (int) GROUND);
         }
         repaint();
     }
