@@ -10,8 +10,8 @@ import java.awt.image.BufferedImage;
 
 public class GamePanel extends JPanel implements KeyListener {
     private final int FPS = 60;
-    private final double GRAVITY = 1.5f;
-    private final double FRICTION = 0.5f;
+    private final double GRAVITY = 2f;
+    private final double FRICTION = 0.8f;
     private final double MAX_FALL = 20f;
     private final double MAX_SPEED = 20f;
     private int BOUNDX;
@@ -20,7 +20,6 @@ public class GamePanel extends JPanel implements KeyListener {
 
     private Player player1;
     private Graphics2D g2;
-    private Timer t;
 
     public GamePanel(Player player1, int width, int height){
         this.player1 = player1;
@@ -32,24 +31,32 @@ public class GamePanel extends JPanel implements KeyListener {
         setFocusable(true);
         requestFocusInWindow();
 
-        // TODO: Recalculate these values
-        final int delay = 1000 / FPS;
-        double dt = (double) 10 / FPS;
-        t = new Timer(delay, (e) -> {
-            if (!player1.isInAir())
-                player1.velX *= FRICTION;
-            player1.velX = Math.clamp(player1.velX, -MAX_SPEED, MAX_SPEED);
+        // dt = 1/FPS
+        double dt = (double) 1 / FPS;
+        Thread t = new Thread(() -> {
+            while(true){
+                if (!player1.isInAir())
+                    player1.velX *= FRICTION;
+                player1.velX = Math.clamp(player1.velX, -MAX_SPEED, MAX_SPEED);
 
-            player1.velY += GRAVITY * dt;
-            player1.velY = Math.min(player1.velY, MAX_FALL);
+                player1.velY += GRAVITY * dt;
+                player1.velY = Math.min(player1.velY, MAX_FALL);
 
-            player1.x += player1.velX * dt;
-            player1.y += player1.velY * dt;
+                player1.x += player1.velX * dt;
+                player1.y += player1.velY * dt;
 
-            if (player1.y >= GROUND){
-                player1.y = GROUND;
-                player1.velY = 0;
-                player1.setInAir(false);
+                if (player1.y >= GROUND){
+                    player1.y = GROUND;
+                    player1.velY = 0;
+                    player1.setInAir(false);
+                }
+
+                try {
+                    Thread.sleep((long) (dt * 100));
+                } catch (InterruptedException e) {
+                    // TODO: Handle error
+                    e.printStackTrace();
+                }
             }
         });
         t.start();
