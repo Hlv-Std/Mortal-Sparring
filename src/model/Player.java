@@ -17,7 +17,7 @@ public class Player {
 
     private String animationState;
     private HashMap<String, List<BufferedImage>> animations;
-    private HashSet<Integer> keysHeld;
+    private Array<Integer> keysHeld;
 
     public Player(String name){
         super();
@@ -32,7 +32,7 @@ public class Player {
         animations.put(PlayerAnimationState.FALLING, new ArrayList<>());
         animations.put(PlayerAnimationState.JUMPING, new ArrayList<>());
         animations.put(PlayerAnimationState.PUNCHING, new ArrayList<>());
-        keysHeld = new HashSet<>();
+        keysHeld = new Array<>(4);
     }
 
     public String getName(){ return name; }
