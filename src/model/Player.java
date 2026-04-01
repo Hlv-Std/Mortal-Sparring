@@ -10,93 +10,98 @@ import java.util.List;
 
 public class Player {
     private String name;
+
     public double x,y;
     public double velX, velY;
-    private boolean isInAir, isFalling, isDucking;
     public Vector2 hitbox;
+
+    private boolean isInAir, isFalling, isDucking;
+    private int jumps;
 
     private String animationState;
     private HashMap<String, List<BufferedImage>> animations;
-    private Array<Integer> keysHeld;
+    private HashSet<Integer> keysHeld;
 
     public Player(String name){
         super();
         this.name = name;
+        x = 0;
+        y = 0;
         velX = 0;
         velY = 0;
         hitbox = new Vector2(100, 100);
+        isInAir = false;
+        isFalling = false;
+        isDucking = false;
+        jumps = 2;
         animationState = PlayerAnimationState.IDLE;
         animations = new HashMap<>();
-        // Set up player animations
         animations.put(PlayerAnimationState.IDLE, new ArrayList<>());
         animations.put(PlayerAnimationState.FALLING, new ArrayList<>());
         animations.put(PlayerAnimationState.JUMPING, new ArrayList<>());
         animations.put(PlayerAnimationState.PUNCHING, new ArrayList<>());
-        keysHeld = new Array<>(4);
+        keysHeld = new HashSet<>();
     }
 
     public String getName(){ return name; }
-    public List<BufferedImage> getFrames(String animationName){
-        return animations.get(animationName);
-    }
+    public List<BufferedImage> getFrames(String animationName){ return animations.get(animationName); }
     public String getAnimationState(){ return animationState; }
 
-    public synchronized void jump(){
+    public void jump(){
         if (!isInAir){
-            velY = -7f;
+            velY = -80;
             isInAir = true;
+            jumps -= 1;
+        } else if (jumps > 0){
+            if (isFalling) {
+                velY = -50;
+            } else {
+                velY -= 40;
+            }
+            jumps -= 1;
         }
     }
-    public synchronized void duck(){
+    public void duck(){
         if (isInAir){
-            velY = 7f;
+            velY = 80;
         }
     }
-    public synchronized void left(){ velX = -20f; }
-    public synchronized void right(){ velX = 20f; }
+    public void left(){ velX = -20; }
+    public void right(){ velX = 20; }
 
     public boolean isInAir(){ return isInAir; }
     public boolean isFalling(){ return isFalling; }
     public boolean isDucking(){ return isDucking; }
 
-    public synchronized void setInAir(boolean isInAir) { this.isInAir = isInAir; }
-    public synchronized void setFalling(boolean isFalling) { this.isFalling = isFalling; }
-    public synchronized void setDucking(boolean isDucking) { this.isDucking = isDucking; }
+    public void setInAir(boolean isInAir) { this.isInAir = isInAir; }
+    public void setFalling(boolean isFalling) { this.isFalling = isFalling; }
+    public void setDucking(boolean isDucking) { this.isDucking = isDucking; }
+    public void resetJumps() { jumps = 2; }
 
-    public void addKeyCombo(int e){ ; }
+    public void addKeyCombo(int e){ keysHeld.add(e); }
     public void loadKeyCombo(){
-        // TODO: Recalculate these values
         final int FPS = 60;
-        double dt = (double) 1 / FPS;
-        Thread t = new Thread(() -> {
-            while(true){
-                if (keysHeld.contains(KeyEvent.VK_W)){
-                    jump();
-                    keysHeld.remove(KeyEvent.VK_W);
-                    continue;
-                }else if (keysHeld.contains(KeyEvent.VK_A)){
-                    left();
-                    keysHeld.remove(KeyEvent.VK_A);
-                    continue;
-                }else if (keysHeld.contains(KeyEvent.VK_S)){
-                    duck();
-                    keysHeld.remove(KeyEvent.VK_S);
-                    continue;
-                }else if (keysHeld.contains(KeyEvent.VK_D)){
-                    right();
-                    keysHeld.remove(KeyEvent.VK_D);
-                    continue;
-                }
-
-                keysHeld.clear();
-
-                try {
-                    Thread.sleep((long) (dt * 100));
-                } catch (InterruptedException e) {
-                    // TODO: Handle Error
-                    e.printStackTrace();
-                }
+        double dt = (double) 1000 / FPS;
+        Timer t = new Timer((int) (dt), (e) -> {
+            if (keysHeld.contains(KeyEvent.VK_W)){
+                jump();
+                keysHeld.remove(KeyEvent.VK_W);
+                return;
+            }else if (keysHeld.contains(KeyEvent.VK_A)){
+                left();
+                keysHeld.remove(KeyEvent.VK_A);
+                return;
+            }else if (keysHeld.contains(KeyEvent.VK_S)){
+                duck();
+                keysHeld.remove(KeyEvent.VK_S);
+                return;
+            }else if (keysHeld.contains(KeyEvent.VK_D)){
+                right();
+                keysHeld.remove(KeyEvent.VK_D);
+                return;
             }
+
+            keysHeld.clear();
         });
         t.start();
     }
