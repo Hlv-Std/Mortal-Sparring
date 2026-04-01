@@ -41,35 +41,34 @@ public class Player {
     }
     public String getAnimationState(){ return animationState; }
 
-    public void jump(){
+    public synchronized void jump(){
         if (!isInAir){
             velY = -7f;
             isInAir = true;
         }
     }
-    public void duck(){
+    public synchronized void duck(){
         if (isInAir){
             velY = 7f;
         }
     }
-    public void left(){ velX = -20f; }
-    public void right(){ velX = 20f; }
+    public synchronized void left(){ velX = -20f; }
+    public synchronized void right(){ velX = 20f; }
 
     public boolean isInAir(){ return isInAir; }
     public boolean isFalling(){ return isFalling; }
     public boolean isDucking(){ return isDucking; }
 
-    public void setInAir(boolean isInAir) { this.isInAir = isInAir; }
-    public void setFalling(boolean isFalling) { this.isFalling = isFalling; }
-    public void setDucking(boolean isDucking) { this.isDucking = isDucking; }
+    public synchronized void setInAir(boolean isInAir) { this.isInAir = isInAir; }
+    public synchronized void setFalling(boolean isFalling) { this.isFalling = isFalling; }
+    public synchronized void setDucking(boolean isDucking) { this.isDucking = isDucking; }
 
-    public void addKeyCombo(int e){ keysHeld.add(e); }
+    public void addKeyCombo(int e){ ; }
     public void loadKeyCombo(){
         // TODO: Recalculate these values
         final int FPS = 60;
-        final int delay = 1000 / FPS;
-        double dt = (double) 10 / FPS;
-        Timer t = new Timer(delay, (e) -> {
+        double dt = (double) 1 / FPS;
+        Thread t = new Thread(() -> {
             while(true){
                 if (keysHeld.contains(KeyEvent.VK_W)){
                     jump();
@@ -88,16 +87,16 @@ public class Player {
                     keysHeld.remove(KeyEvent.VK_D);
                     continue;
                 }
-                break;
-            }
 
-            // TODO: Use Threads instead of timers
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException ex) {
-                throw new RuntimeException(ex);
+                keysHeld.clear();
+
+                try {
+                    Thread.sleep((long) (dt * 100));
+                } catch (InterruptedException e) {
+                    // TODO: Handle Error
+                    e.printStackTrace();
+                }
             }
-            keysHeld.clear();
         });
         t.start();
     }
