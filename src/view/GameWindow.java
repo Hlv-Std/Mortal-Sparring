@@ -4,6 +4,9 @@ import controller.PlayerLoader;
 import model.Player;
 
 import javax.swing.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.WindowEvent;
 import java.nio.file.Path;
 
 public class GameWindow extends JFrame {
@@ -12,7 +15,8 @@ public class GameWindow extends JFrame {
 
     private GamePanel gamePanel;
     private Player player1;
-    private PlayerLoader player1Loader;
+    private Player player2;
+    private PlayerLoader playerLoader;
 
     public GameWindow(){
         super("Mortal Sparring");
@@ -28,16 +32,24 @@ public class GameWindow extends JFrame {
     }
 
     private void initComponents(){
-        // Preapre the player then add it to the game
+        // Preapre the player then add them to the game
         player1 = new Player("Fazz");
-        player1Loader = new PlayerLoader(player1, Path.of("./src/resources/fazz"));
-        player1Loader.loadAnimations();
-        player1.x = (double) getWidth() /2;
-        player1.y = (double) getHeight() /2;
+        player2 = new Player("Fazz");
 
-        gamePanel = new GamePanel(player1, getWidth(), getHeight());
+        playerLoader = new PlayerLoader(player1, Path.of("./src/resources/fazz"));
+        playerLoader.loadAnimations();
+        playerLoader.setPlayer(player2);
+        playerLoader.loadAnimations();
+
+        player1.x = (double) getWidth()  / 2;
+        player1.y = (double) getHeight() / 2;
+
+        player2.x = (double) getWidth()  / 4;
+        player2.y = (double) getHeight() / 4;
+
+
+        gamePanel = new GamePanel(player1, player2, getWidth(), getHeight());
         setContentPane(gamePanel);
-        addKeyListener(gamePanel);
     }
 
     private void loadLayout(){}
