@@ -3,6 +3,7 @@ package controller;
 import model.Player;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,6 +17,10 @@ public class PlayerLoader {
     public PlayerLoader(Player player, Path playerDirectory){
         this.player = player;
         this.playerDirectory = playerDirectory;
+    }
+
+    public void setPlayer(Player player){
+        this.player = player;
     }
 
     public void loadAnimations(){
@@ -38,7 +43,12 @@ public class PlayerLoader {
                     if (sprite == null)
                         return; // Error loading image from disk
 
-                    frames.add(sprite);
+                    BufferedImage scaled = new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB);
+                    Graphics2D g = scaled.createGraphics();
+                    g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+                    g.drawImage(sprite, 0, 0, 100, 100, null);
+                    g.dispose();
+                    frames.add(scaled);
                 }
             }));
         } catch (IOException e) {
