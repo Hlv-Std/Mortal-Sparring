@@ -5,9 +5,7 @@ import model.Player;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
 
 public class GamePanel extends JPanel {
     private final int WIDTH;
@@ -39,7 +37,7 @@ public class GamePanel extends JPanel {
         double dt = (double) 1 / 60; // 60 FPS
         final double GRAVITY = 1500;
         final double FRICTION = 10;
-        Timer t = new Timer(1000 / 60, (_) -> {
+        return new Timer(1000 / 60, (_) -> {
             // NOTE: Input -> Forces -> Friction -> Integrate -> Collide
             // Forces
             player1.velY += GRAVITY * dt;
@@ -48,13 +46,13 @@ public class GamePanel extends JPanel {
             // Friction
             if (player1.isInAir()){
                 player1.velX *= (1 - FRICTION/2.3 * dt);
-            }else {
+            } else {
                 player1.velX *= (1 - FRICTION * dt);
             }
 
             if (player2.isInAir()){
                 player2.velX *= (1 - FRICTION/2.3 * dt);
-            }else {
+            } else {
                 player2.velX *= (1 - FRICTION * dt);
             }
 
@@ -68,7 +66,7 @@ public class GamePanel extends JPanel {
             if (player1.x < 0){
                 player1.x = 0;
                 player1.velX = 0;
-            }else if (player1.x + player1.hitbox.w >= WIDTH){
+            } else if (player1.x + player1.hitbox.w >= WIDTH){
                 player1.x = WIDTH - player1.hitbox.w;
                 player1.velX = 0;
             }
@@ -83,7 +81,7 @@ public class GamePanel extends JPanel {
             if (player2.x < 0){
                 player2.x = 0;
                 player2.velX = 0;
-            }else if (player2.x + player2.hitbox.w >= WIDTH){
+            } else if (player2.x + player2.hitbox.w >= WIDTH){
                 player2.x = WIDTH - player2.hitbox.w;
                 player2.velX = 0;
             }
@@ -98,7 +96,6 @@ public class GamePanel extends JPanel {
             update();
             repaint();
         });
-        return t;
     }
 
     private void update(){
