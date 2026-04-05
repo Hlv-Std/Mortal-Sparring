@@ -74,8 +74,6 @@ public class GamePanel extends JPanel {
             if (player1.y + player1.hitbox.h > GROUND){
                 player1.velY = 0;
                 player1.y = GROUND - player1.hitbox.h;
-                player1.setInAir(false);
-                player1.setFalling(false);
             }
 
             if (player2.x < 0){
@@ -89,8 +87,6 @@ public class GamePanel extends JPanel {
             if (player2.y + player2.hitbox.h > GROUND){
                 player2.velY = 0;
                 player2.y = GROUND - player2.hitbox.h;
-                player2.setInAir(false);
-                player2.setFalling(false);
             }
 
             update();
@@ -100,22 +96,22 @@ public class GamePanel extends JPanel {
 
     private void update(){
         // Position
-        if (!player1.isInAir() && !player1.isFalling()){
-            player1.resetJumps();
-        } else if (player1.isInAir() && player1.velY > 0){
-            player1.setFalling(true);
-        } else {
+        if (player1.y + player1.hitbox.h < GROUND) {
+            player1.setFalling(player1.velY > 0);
             player1.setInAir(true);
-            player1.setFalling(false);
+        } else {
+          player1.setInAir(false);
+          player1.setFalling(false);
+          player1.resetJumps();
         }
 
-        if (!player2.isInAir() && !player2.isFalling()){
-            player2.resetJumps();
-        } else if (player2.isInAir() && player2.velY > 0){
-            player2.setFalling(true);
-        } else {
+        if (player2.y + player2.hitbox.h < GROUND) {
+            player2.setFalling(player2.velY > 0);
             player2.setInAir(true);
+        } else {
+            player2.setInAir(false);
             player2.setFalling(false);
+            player2.resetJumps();
         }
 
         // Input handling
