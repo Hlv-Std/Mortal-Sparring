@@ -1,5 +1,6 @@
 package view;
 
+import controller.InputHandler;
 import model.Player;
 
 import javax.swing.*;
@@ -17,75 +18,15 @@ public class GamePanel extends JPanel {
     private Player player1;
     private Player player2;
 
+    private InputHandler input;
+
     public GamePanel(Player player1, Player player2, int width, int height){
         this.player1 = player1;
         this.player2 = player2;
         this.WIDTH   = width;
         this.HEIGHT  = height;
         GROUND       = (double) HEIGHT - 20;
-
-        // TODO: Finish implementing InputMap/ActionMap
-        InputMap inputMap = getInputMap();
-        ActionMap actionMap = getActionMap();
-        inputMap.put(KeyStroke.getKeyStroke("w"), "player1_jump");
-        inputMap.put(KeyStroke.getKeyStroke("a"), "player1_left");
-        inputMap.put(KeyStroke.getKeyStroke("s"), "player1_duck");
-        inputMap.put(KeyStroke.getKeyStroke("d"), "player1_right");
-
-        inputMap.put(KeyStroke.getKeyStroke("i"), "player2_jump");
-        inputMap.put(KeyStroke.getKeyStroke("j"), "player2_left");
-        inputMap.put(KeyStroke.getKeyStroke("k"), "player2_duck");
-        inputMap.put(KeyStroke.getKeyStroke("l"), "player2_right");
-
-        actionMap.put("player1_jump", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                player1.jump();
-            }
-        });
-        actionMap.put("player1_left", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                player1.left();
-            }
-        });
-        actionMap.put("player1_duck", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                player1.duck();
-            }
-        });
-        actionMap.put("player1_right", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                player1.right();
-            }
-        });
-
-        actionMap.put("player2_jump", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                player2.jump();
-            }
-        });
-        actionMap.put("player2_left", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                player2.left();
-            }
-        });
-        actionMap.put("player2_duck", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                player2.duck();
-            }
-        });
-        actionMap.put("player2_right", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                player2.right();
-            }
-        });
+        input = new InputHandler(this);
 
         setFocusable(true);
         requestFocusInWindow();
@@ -179,6 +120,23 @@ public class GamePanel extends JPanel {
             player2.setInAir(true);
             player2.setFalling(false);
         }
+
+        // Input handling
+        if (input.isHeld(KeyEvent.VK_W)) player1.jump();
+        if (input.isHeld(KeyEvent.VK_A)) player1.left();
+        if (input.isHeld(KeyEvent.VK_S)) player1.duck();
+        if (input.isHeld(KeyEvent.VK_D)) player1.right();
+        if (input.isHeld(KeyEvent.VK_X)) assert false : "Punch not implemented";
+        if (input.isHeld(KeyEvent.VK_C)) assert false : "Kick not implemented";
+        if (input.isHeld(KeyEvent.VK_V)) assert false : "Special not implemented";
+
+        if (input.isHeld(KeyEvent.VK_U)) player2.jump();
+        if (input.isHeld(KeyEvent.VK_H)) player2.left();
+        if (input.isHeld(KeyEvent.VK_J)) player2.duck();
+        if (input.isHeld(KeyEvent.VK_K)) player2.right();
+        if (input.isHeld(KeyEvent.VK_M)) assert false : "Punch not implemented";
+        if (input.isHeld(KeyEvent.VK_COMMA)) assert false : "Kick not implemented";
+        if (input.isHeld(KeyEvent.VK_PERIOD)) assert false : "Special not implemented";
     }
 
     @Override
