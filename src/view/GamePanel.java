@@ -142,43 +142,48 @@ public class GamePanel extends JPanel {
         g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        for (BufferedImage frame : player1.getFrames(player1.getAnimationState())){
+        // Player 1
+        {
+            player1.advanceFrame();
             // Sprite
             g2.drawImage(
-                    frame,
+                    player1.getCurrentFrame(),
                     (int) player1.x,
-                    (int) player1.y ,
+                    (int) player1.y,
                     null);
+            g2.setColor(Color.BLUE);
+            // Position
+            g2.drawRect((int) player1.x, (int) player1.y, 1, 1);
+            // Hitbox
+            g2.drawRect(
+                    (int) player1.x,
+                    (int) player1.y,
+                    (int) player1.hitbox.w,
+                    (int) player1.hitbox.h
+            );
         }
-        g2.setColor(Color.BLUE);
-        // Position
-        g2.drawRect((int) player1.x, (int) player1.y, 1, 1);
-        // Hitbox
-        g2.drawRect(
-                (int) player1.x,
-                (int) player1.y,
-                (int) player1.hitbox.w,
-                (int) player1.hitbox.h
-        );
 
-        for (BufferedImage frame : player2.getFrames(player2.getAnimationState())){
+        // Player 2
+        {
+            player2.advanceFrame();
             // Sprite
             g2.drawImage(
-                    frame,
+                    player2.getCurrentFrame(),
                     (int) player2.x,
-                    (int) player2.y ,
+                    (int) player2.y,
                     null);
+            g2.setColor(Color.BLUE);
+            // Position
+            g2.drawRect((int) player2.x, (int) player2.y, 1, 1);
+            // Hitbox
+            g2.drawRect(
+                    (int) player2.x,
+                    (int) player2.y,
+                    (int) player2.hitbox.w,
+                    (int) player2.hitbox.h
+            );
         }
-        g2.setColor(Color.BLUE);
-        // Position
-        g2.drawRect((int) player2.x, (int) player2.y, 1, 1);
-        // Hitbox
-        g2.drawRect(
-                (int) player2.x,
-                (int) player2.y,
-                (int) player2.hitbox.w,
-                (int) player2.hitbox.h
-        );
+
         // Ground
         g2.drawLine(0, (int) GROUND, WIDTH, (int) GROUND);
     }

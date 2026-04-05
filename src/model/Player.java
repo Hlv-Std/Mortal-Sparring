@@ -14,22 +14,24 @@ public class Player {
     private boolean isInAir, isFalling, isDucking;
     private int jumps;
     private String animationState;
+    private int animationFrameNumber;
     private HashMap<String, List<BufferedImage>> animations;
 
     public Player(String name){
         super();
-        this.name      = name;
-        x              = 0;
-        y              = 0;
-        velX           = 0;
-        velY           = 0;
-        hitbox         = new Rect(100, 100);
-        isInAir        = false;
-        isFalling      = false;
-        isDucking      = false;
-        jumps          = 2;
-        animationState = PlayerAnimationState.IDLE;
-        animations     = new HashMap<>();
+        this.name            = name;
+        x                    = 0;
+        y                    = 0;
+        velX                 = 0;
+        velY                 = 0;
+        hitbox               = new Rect(100, 100);
+        isInAir              = false;
+        isFalling            = false;
+        isDucking            = false;
+        jumps                = 2;
+        animationState       = PlayerAnimationState.IDLE;
+        animationFrameNumber = 0;
+        animations           = new HashMap<>();
 
         animations.put(PlayerAnimationState.IDLE, new ArrayList<>());
         animations.put(PlayerAnimationState.FALLING, new ArrayList<>());
@@ -71,6 +73,11 @@ public class Player {
     public void setFalling(boolean isFalling) { this.isFalling = isFalling; }
     public void setDucking(boolean isDucking) { this.isDucking = isDucking; }
     public void resetJumps() { jumps = 2; }
+
+    public void advanceFrame(){ animationFrameNumber = (animationFrameNumber++) % animations.get(animationState).size(); };
+    public BufferedImage getCurrentFrame(){
+        return getFrames(animationState).get(animationFrameNumber);
+    }
 }
 
 interface PlayerAnimationState {
