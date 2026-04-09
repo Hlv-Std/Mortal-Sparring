@@ -19,8 +19,9 @@ public class PlayerLoader {
         this.playerDirectory = playerDirectory;
     }
 
-    public void setPlayer(Player player){
+    public void setPlayer(Player player, Path path){
         this.player = player;
+        this.playerDirectory = path;
     }
 
     public void loadAnimations(){
