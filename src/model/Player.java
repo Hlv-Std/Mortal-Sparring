@@ -72,7 +72,7 @@ public class Player {
     public void setInAir(boolean isInAir) { this.isInAir = isInAir; }
     public void setFalling(boolean isFalling) { this.isFalling = isFalling; }
     public void setDucking(boolean isDucking) { this.isDucking = isDucking; }
-    public void resetJumps() { jumps = 2; }
+    public void resetJumps() { jumps = 1; }
 
     public void advanceFrame(){ animationFrameNumber = (animationFrameNumber++) % animations.get(animationState).size(); };
     public BufferedImage getCurrentFrame(){
