@@ -17,6 +17,7 @@ A mortal kombat clone made as a school project
     - [ ] Static backgrounds
     - [ ] Animated backgrounds
     - [ ] Cromatic abberrations
+- [ ] Move everything out of Player and manage Player in another Class like `Giocatore`
 - [ ] Animations
     - [ ] Animation cancel
 - [ ] Second player
