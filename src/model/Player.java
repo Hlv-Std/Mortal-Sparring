@@ -1,6 +1,8 @@
 package model;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +18,7 @@ public class Player {
     private String animationState;
     private int animationFrameNumber;
     private HashMap<String, List<BufferedImage>> animations;
+    private HashMap<String, ActionListener> moveset;
 
     public Player(String name){
         super();
@@ -28,42 +31,48 @@ public class Player {
         isInAir              = false;
         isFalling            = false;
         isDucking            = false;
-        jumps                = 2;
+        jumps                = 1;
         animationState       = PlayerAnimationState.IDLE;
         animationFrameNumber = 0;
         animations           = new HashMap<>();
+        moveset              = new HashMap<>();
 
         animations.put(PlayerAnimationState.IDLE, new ArrayList<>());
         animations.put(PlayerAnimationState.FALLING, new ArrayList<>());
         animations.put(PlayerAnimationState.JUMPING, new ArrayList<>());
         animations.put(PlayerAnimationState.PUNCHING, new ArrayList<>());
+
+        moveset.put("Jump", (_) -> {
+            if (!isInAir){
+                velY = -600;
+                isInAir = true;
+                jumps -= 1;
+            } else if (jumps > 0){
+                if (isFalling) {
+                    velY = -500;
+                } else {
+                    velY -= 400;
+                }
+                jumps -= 1;
+            }
+        });
+        moveset.put("Duck", (_) -> {
+            if (isInAir){
+                velY = 800;
+            }
+        });
+        moveset.put("Left", (_) -> velX = -300);
+        moveset.put("Right", (_) -> velX = 300);
+        moveset.put("SDCombo", (_) -> velX = 800);
     }
 
     public String getName(){ return name; }
     public List<BufferedImage> getFrames(String animationName){ return animations.get(animationName); }
     public String getAnimationState(){ return animationState; }
 
-    public void jump(){
-        if (!isInAir){
-            velY = -600;
-            isInAir = true;
-            jumps -= 1;
-        } else if (jumps > 0){
-            if (isFalling) {
-                velY = -500;
-            } else {
-                velY -= 400;
-            }
-            jumps -= 1;
-        }
+    public void executeAction(String action){
+        moveset.get(action).actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, action));
     }
-    public void duck(){
-        if (isInAir){
-            velY = 800;
-        }
-    }
-    public void left(){ velX = -300; }
-    public void right(){ velX = 300; }
 
     public boolean isInAir(){ return isInAir; }
     public boolean isFalling(){ return isFalling; }

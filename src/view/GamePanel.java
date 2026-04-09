@@ -34,6 +34,7 @@ public class GamePanel extends JPanel {
 
         Timer t = getTimer(player1, player2);
         t.start();
+        input.start();
     }
 
     private Timer getTimer(Player player1, Player player2) {
@@ -118,21 +119,23 @@ public class GamePanel extends JPanel {
         }
 
         // Input handling
-        if (input.isHeld(KeyEvent.VK_W)) player1.jump();
-        if (input.isHeld(KeyEvent.VK_A)) player1.left();
-        if (input.isHeld(KeyEvent.VK_S)) player1.duck();
-        if (input.isHeld(KeyEvent.VK_D)) player1.right();
+        if (input.isHeld(KeyEvent.VK_W)) player1.executeAction("Jump");
+        if (input.isHeld(KeyEvent.VK_A)) player1.executeAction("Left");
+        if (input.isHeld(KeyEvent.VK_S)) player1.executeAction("Duck");
+        if (input.isHeld(KeyEvent.VK_D)) player1.executeAction("Right");
         if (input.isHeld(KeyEvent.VK_X)) assert false : "Punch not implemented";
         if (input.isHeld(KeyEvent.VK_C)) assert false : "Kick not implemented";
         if (input.isHeld(KeyEvent.VK_V)) assert false : "Special not implemented";
+        if (input.combo(KeyEvent.VK_S, KeyEvent.VK_D)) player1.executeAction("SDCombo");
 
-        if (input.isHeld(KeyEvent.VK_U)) player2.jump();
-        if (input.isHeld(KeyEvent.VK_H)) player2.left();
-        if (input.isHeld(KeyEvent.VK_J)) player2.duck();
-        if (input.isHeld(KeyEvent.VK_K)) player2.right();
+        if (input.isHeld(KeyEvent.VK_U)) player2.executeAction("Jump");
+        if (input.isHeld(KeyEvent.VK_H)) player2.executeAction("Left");
+        if (input.isHeld(KeyEvent.VK_J)) player2.executeAction("Duck");
+        if (input.isHeld(KeyEvent.VK_K)) player2.executeAction("Right");
         if (input.isHeld(KeyEvent.VK_M)) assert false : "Punch not implemented";
         if (input.isHeld(KeyEvent.VK_COMMA)) assert false : "Kick not implemented";
         if (input.isHeld(KeyEvent.VK_PERIOD)) assert false : "Special not implemented";
+        if (input.combo(KeyEvent.VK_J, KeyEvent.VK_K)) player2.executeAction("SDCombo");
     }
 
     @Override
