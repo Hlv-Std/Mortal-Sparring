@@ -17,7 +17,8 @@ public class GameWindow extends JFrame {
     private BackgroundLoader bgLoader;
     private Player player1;
     private Player player2;
-    private PlayerLoader playerLoader;
+    private PlayerLoader playerLoader1;
+    private PlayerLoader playerLoader2;
 
     public GameWindow(){
         super("Mortal Sparring");
@@ -41,16 +42,16 @@ public class GameWindow extends JFrame {
         player1 = new Player("Fazz");
         player2 = new Player("Fazz");
 
-        playerLoader = new PlayerLoader(player1, Path.of("./src/resources/fazz"));
-        playerLoader.loadAnimations();
-        playerLoader.setPlayer(player2, Path.of("./src/resources/fazz2"));
-        playerLoader.loadAnimations();
+        playerLoader1 = new PlayerLoader(player1, Path.of("./src/resources/fazz"));
+        playerLoader1.loadAnimations();
+        playerLoader2 = new PlayerLoader(player2, Path.of("./src/resources/fazz2"));
+        playerLoader2.loadAnimations();
 
         player1.x = (double) getWidth()  / 2;
         player1.y = (double) getHeight() / 2;
 
-        player2.x = (double) getWidth()  / 4;
-        player2.y = (double) getHeight() / 4;
+        player2.x = (double) getWidth()  / 1.5;
+        player2.y = (double) getHeight() / 1.5;
 
 
         gamePanel = new GamePanel(player1, player2, getWidth(), getHeight(), bg);
