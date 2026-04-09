@@ -1,6 +1,7 @@
 package view;
 
 import controller.InputHandler;
+import model.Background;
 import model.Player;
 
 import javax.swing.*;
@@ -13,18 +14,20 @@ public class GamePanel extends JPanel {
     private final double GROUND;
 
     private Graphics2D g2;
+    private Background bg;
     private Player player1;
     private Player player2;
 
     private InputHandler input;
 
-    public GamePanel(Player player1, Player player2, int width, int height){
+    public GamePanel(Player player1, Player player2, int width, int height, Background bg){
         this.player1 = player1;
         this.player2 = player2;
         this.WIDTH   = width;
         this.HEIGHT  = height;
-        GROUND       = (double) HEIGHT - 20;
-        input = new InputHandler(this);
+        this.bg      = bg;
+        GROUND       = (double) HEIGHT - 81;
+        input        = new InputHandler(this);
 
         setFocusable(true);
         requestFocusInWindow();
@@ -138,6 +141,16 @@ public class GamePanel extends JPanel {
         g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
+        {
+            bg.advanceFrame();
+            g2.drawImage(
+                    bg.getCurrentAnimationFrame(),
+                    0,
+                    0,
+                    null
+            );
+        }
+
         // Player 1
         {
             player1.advanceFrame();
@@ -149,14 +162,14 @@ public class GamePanel extends JPanel {
                     null);
             g2.setColor(Color.BLUE);
             // Position
-            g2.drawRect((int) player1.x, (int) player1.y, 1, 1);
+            // g2.drawRect((int) player1.x, (int) player1.y, 1, 1);
             // Hitbox
-            g2.drawRect(
-                    (int) player1.x,
-                    (int) player1.y,
-                    (int) player1.hitbox.w,
-                    (int) player1.hitbox.h
-            );
+            // g2.drawRect(
+            //         (int) player1.x,
+            //         (int) player1.y,
+            //         (int) player1.hitbox.w,
+            //         (int) player1.hitbox.h
+            // );
         }
 
         // Player 2
@@ -170,17 +183,17 @@ public class GamePanel extends JPanel {
                     null);
             g2.setColor(Color.BLUE);
             // Position
-            g2.drawRect((int) player2.x, (int) player2.y, 1, 1);
+            // g2.drawRect((int) player2.x, (int) player2.y, 1, 1);
             // Hitbox
-            g2.drawRect(
-                    (int) player2.x,
-                    (int) player2.y,
-                    (int) player2.hitbox.w,
-                    (int) player2.hitbox.h
-            );
+            // g2.drawRect(
+            //         (int) player2.x,
+            //         (int) player2.y,
+            //         (int) player2.hitbox.w,
+            //         (int) player2.hitbox.h
+            // );
         }
 
         // Ground
-        g2.drawLine(0, (int) GROUND, WIDTH, (int) GROUND);
+        // g2.drawLine(0, (int) GROUND, WIDTH, (int) GROUND);
     }
 }
