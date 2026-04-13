@@ -4,9 +4,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class Player {
     private String name;
@@ -65,6 +63,16 @@ public class Player {
         });
         moveset.put("Left", (_) -> velX = -300);
         moveset.put("Right", (_) -> velX = 300);
+        moveset.put("Punch", (_) -> {
+            runningAttacks.addLast(new AttackHitbox(x, y, new Rect(20, 20), 10, 8));
+        });
+        moveset.put("Kick", (_) -> {
+
+        });
+        moveset.put("Special", (_) -> {
+
+        });
+        // !DEBUG
         moveset.put("SDCombo", (_) -> velX = 800);
     }
 
