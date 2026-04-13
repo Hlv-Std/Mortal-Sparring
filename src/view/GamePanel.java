@@ -1,6 +1,7 @@
 package view;
 
 import controller.InputHandler;
+import model.AttackHitbox;
 import model.Background;
 import model.Player;
 
@@ -136,6 +137,27 @@ public class GamePanel extends JPanel {
         if (input.isHeld(KeyEvent.VK_COMMA)) assert false : "Kick not implemented";
         if (input.isHeld(KeyEvent.VK_PERIOD)) assert false : "Special not implemented";
         if (input.combo(KeyEvent.VK_J, KeyEvent.VK_K)) player2.executeAction("SDCombo");
+
+        // Attack TTL
+        Deque<AttackHitbox> runningAttacks = player1.getRunningAttacks();
+        if (!runningAttacks.isEmpty()){
+            AttackHitbox hb = runningAttacks.getFirst();
+            if (hb.isAlive()){
+                hb.decrease();
+            }else {
+                runningAttacks.removeFirst();
+            }
+        }
+
+        runningAttacks = player2.getRunningAttacks();
+        if (!runningAttacks.isEmpty()){
+            AttackHitbox hb = runningAttacks.getFirst();
+            if (hb.isAlive()){
+                hb.decrease();
+            }else {
+                runningAttacks.removeFirst();
+            }
+        }
     }
 
     @Override
@@ -173,6 +195,17 @@ public class GamePanel extends JPanel {
             //         (int) player1.hitbox.w,
             //         (int) player1.hitbox.h
             // );
+
+            g2.setColor(Color.ORANGE);
+            AttackHitbox hb = player1.getCurrentAttackHitbox();
+            if (hb != null){
+                g2.drawRect(
+                        (int) hb.x,
+                        (int) hb.y,
+                        (int) hb.hitbox.w,
+                        (int) hb.hitbox.h
+                );
+            }
         }
 
         // Player 2
@@ -194,6 +227,17 @@ public class GamePanel extends JPanel {
             //         (int) player2.hitbox.w,
             //         (int) player2.hitbox.h
             // );
+
+            g2.setColor(Color.ORANGE);
+            AttackHitbox hb = player2.getCurrentAttackHitbox();
+            if (hb != null){
+                g2.drawRect(
+                        (int) hb.x,
+                        (int) hb.y,
+                        (int) hb.hitbox.w,
+                        (int) hb.hitbox.h
+                );
+            }
         }
 
         // Ground

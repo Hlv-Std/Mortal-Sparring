@@ -13,6 +13,7 @@ public class Player {
     public double x,y;
     public double velX, velY;
     public Rect hitbox;
+    public Deque<AttackHitbox> runningAttacks;
     private boolean isInAir, isFalling, isDucking;
     private int jumps;
     private String animationState;
@@ -34,6 +35,7 @@ public class Player {
         jumps                = 1;
         animationState       = PlayerAnimationState.IDLE;
         animationFrameNumber = 0;
+        runningAttacks       = new ArrayDeque<>();
         animations           = new HashMap<>();
         moveset              = new HashMap<>();
 
@@ -87,6 +89,12 @@ public class Player {
     public BufferedImage getCurrentFrame(){
         return getFrames(animationState).get(animationFrameNumber);
     }
+
+    public Deque<AttackHitbox> getRunningAttacks(){ return runningAttacks; }
+    public AttackHitbox getCurrentAttackHitbox(){
+        if (runningAttacks.isEmpty())
+            return null;
+        return runningAttacks.getFirst(); }
 }
 
 interface PlayerAnimationState {
