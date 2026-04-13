@@ -8,6 +8,7 @@ import model.Player;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.Deque;
 
 public class GamePanel extends JPanel {
     private final int WIDTH;
@@ -124,7 +125,7 @@ public class GamePanel extends JPanel {
         if (input.isHeld(KeyEvent.VK_A)) player1.executeAction("Left");
         if (input.isHeld(KeyEvent.VK_S)) player1.executeAction("Duck");
         if (input.isHeld(KeyEvent.VK_D)) player1.executeAction("Right");
-        if (input.isHeld(KeyEvent.VK_X)) assert false : "Punch not implemented";
+        if (input.isHeld(KeyEvent.VK_X)) player1.executeAction("Punch");
         if (input.isHeld(KeyEvent.VK_C)) assert false : "Kick not implemented";
         if (input.isHeld(KeyEvent.VK_V)) assert false : "Special not implemented";
         if (input.combo(KeyEvent.VK_S, KeyEvent.VK_D)) player1.executeAction("SDCombo");
@@ -133,7 +134,7 @@ public class GamePanel extends JPanel {
         if (input.isHeld(KeyEvent.VK_H)) player2.executeAction("Left");
         if (input.isHeld(KeyEvent.VK_J)) player2.executeAction("Duck");
         if (input.isHeld(KeyEvent.VK_K)) player2.executeAction("Right");
-        if (input.isHeld(KeyEvent.VK_M)) assert false : "Punch not implemented";
+        if (input.isHeld(KeyEvent.VK_M)) player2.executeAction("Punch");
         if (input.isHeld(KeyEvent.VK_COMMA)) assert false : "Kick not implemented";
         if (input.isHeld(KeyEvent.VK_PERIOD)) assert false : "Special not implemented";
         if (input.combo(KeyEvent.VK_J, KeyEvent.VK_K)) player2.executeAction("SDCombo");
@@ -187,7 +188,7 @@ public class GamePanel extends JPanel {
                     null);
             g2.setColor(Color.BLUE);
             // Position
-            // g2.drawRect((int) player1.x, (int) player1.y, 1, 1);
+            g2.drawRect((int) player1.x, (int) player1.y, 1, 1);
             // Hitbox
             // g2.drawRect(
             //         (int) player1.x,
