@@ -8,7 +8,7 @@ import java.util.Deque;
 import java.util.HashSet;
 import java.util.Set;
 
-// TODO: add threshold to allow combo and fix double jump
+// TODO: make this player dependant (maybe Player extend JComponent?)
 public class InputHandler {
     private JComponent component;
     private Set<Integer> keysHeld;

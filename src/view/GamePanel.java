@@ -128,6 +128,7 @@ public class GamePanel extends JPanel {
         if (input.isHeld(KeyEvent.VK_X)) player1.executeAction("Punch");
         if (input.isHeld(KeyEvent.VK_C)) assert false : "Kick not implemented";
         if (input.isHeld(KeyEvent.VK_V)) assert false : "Special not implemented";
+        // DEBUG: Remove this later
         if (input.combo(KeyEvent.VK_S, KeyEvent.VK_D)) player1.executeAction("SDCombo");
 
         if (input.isHeld(KeyEvent.VK_U)) player2.executeAction("Jump");
@@ -137,6 +138,7 @@ public class GamePanel extends JPanel {
         if (input.isHeld(KeyEvent.VK_M)) player2.executeAction("Punch");
         if (input.isHeld(KeyEvent.VK_COMMA)) assert false : "Kick not implemented";
         if (input.isHeld(KeyEvent.VK_PERIOD)) assert false : "Special not implemented";
+        // DEBUG: Remove this later
         if (input.combo(KeyEvent.VK_J, KeyEvent.VK_K)) player2.executeAction("SDCombo");
 
         // Attack TTL

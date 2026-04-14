@@ -76,7 +76,7 @@ public class Player {
         moveset.put("Special", (_) -> {
 
         });
-        // !DEBUG
+        // DEBUG: Add test combo
         moveset.put("SDCombo", (_) -> velX = 800);
     }
 
@@ -89,6 +89,7 @@ public class Player {
     }
 
     public boolean isInAir(){ return isInAir; }
+    // TODO: Remove unused functions
     public boolean isFalling(){ return isFalling; }
     public boolean isDucking(){ return isDucking; }
     public boolean isInAction(){ return isInAction; }
@@ -99,6 +100,7 @@ public class Player {
     public void setInAction(boolean isInAction){ this.isInAction = isInAction; }
     public void resetJumps() { jumps = 1; }
 
+    // NOTE: Reset animationFrameNumber (might refactor to counter) on animationState change
     public void advanceFrame(){ animationFrameNumber = (animationFrameNumber++) % animations.get(animationState).size(); };
     public BufferedImage getCurrentFrame(){
         return getFrames(animationState).get(animationFrameNumber);
@@ -108,9 +110,11 @@ public class Player {
     public AttackHitbox getCurrentAttackHitbox(){
         if (runningAttacks.isEmpty())
             return null;
-        return runningAttacks.getFirst(); }
+        return runningAttacks.getFirst();
+    }
 }
 
+// TODO: Migrate to Enum
 interface PlayerAnimationState {
     String IDLE = "Idle";
     String JUMPING = "Jumping";
