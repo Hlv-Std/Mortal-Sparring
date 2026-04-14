@@ -12,7 +12,7 @@ public class Player {
     public double velX, velY;
     public Rect hitbox;
     public Deque<AttackHitbox> runningAttacks;
-    private boolean isInAir, isFalling, isDucking;
+    private boolean isInAir, isFalling, isDucking, isInAction;
     private int jumps;
     private String animationState;
     private int animationFrameNumber;
@@ -30,6 +30,7 @@ public class Player {
         isInAir              = false;
         isFalling            = false;
         isDucking            = false;
+        isInAction           = false;
         jumps                = 1;
         animationState       = PlayerAnimationState.IDLE;
         animationFrameNumber = 0;
@@ -64,7 +65,10 @@ public class Player {
         moveset.put("Left", (_) -> velX = -300);
         moveset.put("Right", (_) -> velX = 300);
         moveset.put("Punch", (_) -> {
-            runningAttacks.addLast(new AttackHitbox(x, y, new Rect(20, 20), 10, 8));
+            if (!isInAction){
+                isInAction = true;
+                runningAttacks.addLast(new AttackHitbox(x, y, new Rect(20, 20), 10, 8));
+            }
         });
         moveset.put("Kick", (_) -> {
 
@@ -87,10 +91,12 @@ public class Player {
     public boolean isInAir(){ return isInAir; }
     public boolean isFalling(){ return isFalling; }
     public boolean isDucking(){ return isDucking; }
+    public boolean isInAction(){ return isInAction; }
 
     public void setInAir(boolean isInAir) { this.isInAir = isInAir; }
     public void setFalling(boolean isFalling) { this.isFalling = isFalling; }
     public void setDucking(boolean isDucking) { this.isDucking = isDucking; }
+    public void setInAction(boolean isInAction){ this.isInAction = isInAction; }
     public void resetJumps() { jumps = 1; }
 
     public void advanceFrame(){ animationFrameNumber = (animationFrameNumber++) % animations.get(animationState).size(); };

@@ -146,6 +146,7 @@ public class GamePanel extends JPanel {
             if (hb.isAlive()){
                 hb.decrease();
             }else {
+                player1.setInAction(false);
                 runningAttacks.removeFirst();
             }
         }
@@ -156,6 +157,7 @@ public class GamePanel extends JPanel {
             if (hb.isAlive()){
                 hb.decrease();
             }else {
+                player2.setInAction(false);
                 runningAttacks.removeFirst();
             }
         }
@@ -190,12 +192,12 @@ public class GamePanel extends JPanel {
             // Position
             g2.drawRect((int) player1.x, (int) player1.y, 1, 1);
             // Hitbox
-            // g2.drawRect(
-            //         (int) player1.x,
-            //         (int) player1.y,
-            //         (int) player1.hitbox.w,
-            //         (int) player1.hitbox.h
-            // );
+            g2.drawRect(
+                    (int) player1.x,
+                    (int) player1.y,
+                    (int) player1.hitbox.w,
+                    (int) player1.hitbox.h
+            );
 
             g2.setColor(Color.ORANGE);
             AttackHitbox hb = player1.getCurrentAttackHitbox();
