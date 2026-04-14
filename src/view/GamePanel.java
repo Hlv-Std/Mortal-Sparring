@@ -34,16 +34,17 @@ public class GamePanel extends JPanel {
         setFocusable(true);
         requestFocusInWindow();
 
-        Timer t = getTimer(player1, player2);
+        Timer t = getTimer();
         t.start();
         input.start();
     }
 
-    private Timer getTimer(Player player1, Player player2) {
-        double dt = (double) 1 / 60; // 60 FPS
+    private Timer getTimer() {
+        final int FPS = 60;
+        final double dt = (double) 1 / FPS;
         final double GRAVITY = 1500;
         final double FRICTION = 10;
-        return new Timer(1000 / 60, (_) -> {
+        return new Timer(1000 / FPS, (_) -> {
             // NOTE: Input -> Forces -> Friction -> Integrate -> Collide
             // Forces
             player1.velY += GRAVITY * dt;
