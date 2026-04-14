@@ -16,11 +16,11 @@ public class GamePanel extends JPanel {
     private final double GROUND;
 
     private Graphics2D g2;
-    private Background bg;
-    private Player player1;
-    private Player player2;
+    private final Background bg;
+    private final Player player1;
+    private final Player player2;
 
-    private InputHandler input;
+    private final InputHandler input;
 
     public GamePanel(Player player1, Player player2, int width, int height, Background bg){
         this.player1 = player1;
