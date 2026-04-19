@@ -127,6 +127,7 @@ public class GamePanel extends JPanel {
           character1.setInAir(false);
           character1.setFalling(false);
           character1.resetJumps();
+          character1.setDucking(false);
         }
 
         if (character2.y + character2.hitbox.h < GROUND) {
@@ -136,6 +137,7 @@ public class GamePanel extends JPanel {
             character2.setInAir(false);
             character2.setFalling(false);
             character2.resetJumps();
+            character2.setDucking(false);
         }
 
         // Input handling
