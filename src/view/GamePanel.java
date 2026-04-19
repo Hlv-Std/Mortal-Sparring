@@ -1,13 +1,13 @@
 package view;
 
 import controller.InputHandler;
-import model.AttackHitbox;
-import model.Background;
-import model.Player;
+import model.*;
+import model.Character;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 import java.util.Deque;
 
 public class GamePanel extends JPanel {
@@ -19,17 +19,23 @@ public class GamePanel extends JPanel {
     private final Background bg;
     private final Player player1;
     private final Player player2;
+    private final Character character1;
+    private final Character character2;
+    private double lastPosX = 0;
+    private double lastPosY = 0;
 
     private final InputHandler input;
 
     public GamePanel(Player player1, Player player2, int width, int height, Background bg){
         this.player1 = player1;
         this.player2 = player2;
+        this.character1 = player1.getCharacter();
+        this.character2 = player2.getCharacter();
         this.WIDTH   = width;
         this.HEIGHT  = height;
         this.bg      = bg;
         GROUND       = (double) HEIGHT - 81;
-        input        = new InputHandler(this);
+        input        = new InputHandler(this, player1, player2);
 
         setFocusable(true);
         requestFocusInWindow();
@@ -44,56 +50,55 @@ public class GamePanel extends JPanel {
         final double dt = (double) 1 / FPS;
         final double GRAVITY = 1500;
         final double FRICTION = 10;
+        final double MAX_VELOCITY = 900;
         return new Timer(1000 / FPS, (_) -> {
             // NOTE: Input -> Forces -> Friction -> Integrate -> Collide
             // Forces
-            player1.velY += GRAVITY * dt;
-            player2.velY += GRAVITY * dt;
+            character1.velY += GRAVITY * dt;
+            character2.velY += GRAVITY * dt;
 
             // Friction
-            if (player1.isInAir()){
-                player1.velX *= (1 - FRICTION/2.3 * dt);
+            if (character1.isInAir()){
+                character1.velX *= (1 - FRICTION/2.3 * dt);
             } else {
-                player1.velX *= (1 - FRICTION * dt);
+                character1.velX *= (1 - FRICTION * dt);
             }
 
-            if (player2.isInAir()){
-                player2.velX *= (1 - FRICTION/2.3 * dt);
+            if (character2.isInAir()){
+                character2.velX *= (1 - FRICTION/2.3 * dt);
             } else {
-                player2.velX *= (1 - FRICTION * dt);
+                character2.velX *= (1 - FRICTION * dt);
             }
 
             // Integrating
-            player1.x += player1.velX * dt;
-            player2.x += player2.velX * dt;
-            player1.y += player1.velY * dt;
-            player2.y += player2.velY * dt;
+            character1.x += character1.velX * dt;
+            character1.y += character1.velY * dt;
+            character2.x += character2.velX * dt;
+            character2.y += character2.velY * dt;
 
             // Collisions
-            if (player1.x < 0){
-                player1.x = 0;
-                player1.velX = 0;
-            } else if (player1.x + player1.hitbox.w >= WIDTH){
-                player1.x = WIDTH - player1.hitbox.w;
-                player1.velX = 0;
+            if (character1.x < 0){
+                character1.x = 0;
+                character1.velX = 0;
+            } else if (character1.x + character1.hitbox.w >= WIDTH){
+                character1.x = WIDTH - character1.hitbox.w;
+                character1.velX = 0;
+            }
+            if (character1.y + character1.hitbox.h > GROUND){
+                character1.velY = 0;
+                character1.y = GROUND - character1.hitbox.h;
             }
 
-            if (player1.y + player1.hitbox.h > GROUND){
-                player1.velY = 0;
-                player1.y = GROUND - player1.hitbox.h;
+            if (character2.x < 0){
+                character2.x = 0;
+                character2.velX = 0;
+            } else if (character2.x + character2.hitbox.w >= WIDTH){
+                character2.x = WIDTH - character2.hitbox.w;
+                character2.velX = 0;
             }
-
-            if (player2.x < 0){
-                player2.x = 0;
-                player2.velX = 0;
-            } else if (player2.x + player2.hitbox.w >= WIDTH){
-                player2.x = WIDTH - player2.hitbox.w;
-                player2.velX = 0;
-            }
-
-            if (player2.y + player2.hitbox.h > GROUND){
-                player2.velY = 0;
-                player2.y = GROUND - player2.hitbox.h;
+            if (character2.y + character2.hitbox.h > GROUND){
+                character2.velY = 0;
+                character2.y = GROUND - character2.hitbox.h;
             }
 
             update();
@@ -103,64 +108,64 @@ public class GamePanel extends JPanel {
 
     private void update(){
         // Position
-        if (player1.y + player1.hitbox.h < GROUND) {
-            player1.setFalling(player1.velY > 0);
-            player1.setInAir(true);
+        if (character1.y + character1.hitbox.h < GROUND) {
+            character1.setFalling(character1.velY > 0);
+            character1.setInAir(true);
         } else {
-          player1.setInAir(false);
-          player1.setFalling(false);
-          player1.resetJumps();
+          character1.setInAir(false);
+          character1.setFalling(false);
+          character1.resetJumps();
         }
 
-        if (player2.y + player2.hitbox.h < GROUND) {
-            player2.setFalling(player2.velY > 0);
-            player2.setInAir(true);
+        if (character2.y + character2.hitbox.h < GROUND) {
+            character2.setFalling(character2.velY > 0);
+            character2.setInAir(true);
         } else {
-            player2.setInAir(false);
-            player2.setFalling(false);
-            player2.resetJumps();
+            character2.setInAir(false);
+            character2.setFalling(false);
+            character2.resetJumps();
         }
 
         // Input handling
-        if (input.isHeld(KeyEvent.VK_W)) player1.executeAction("Jump");
-        if (input.isHeld(KeyEvent.VK_A)) player1.executeAction("Left");
-        if (input.isHeld(KeyEvent.VK_S)) player1.executeAction("Duck");
-        if (input.isHeld(KeyEvent.VK_D)) player1.executeAction("Right");
-        if (input.isHeld(KeyEvent.VK_X)) player1.executeAction("Punch");
+        if (input.isHeld(KeyEvent.VK_W)) character1.executeAction("Jump");
+        if (input.isHeld(KeyEvent.VK_A)) character1.executeAction("Left");
+        if (input.isHeld(KeyEvent.VK_S)) character1.executeAction("Duck");
+        if (input.isHeld(KeyEvent.VK_D)) character1.executeAction("Right");
+        if (input.isHeld(KeyEvent.VK_X)) character1.executeAction("Punch");
         if (input.isHeld(KeyEvent.VK_C)) assert false : "Kick not implemented";
         if (input.isHeld(KeyEvent.VK_V)) assert false : "Special not implemented";
         // DEBUG: Remove this later
-        if (input.combo(KeyEvent.VK_S, KeyEvent.VK_D)) player1.executeAction("SDCombo");
+        if (player1.getInputProcesser().combo(KeyEvent.VK_S, KeyEvent.VK_D)) character1.executeAction("SDCombo");
 
-        if (input.isHeld(KeyEvent.VK_U)) player2.executeAction("Jump");
-        if (input.isHeld(KeyEvent.VK_H)) player2.executeAction("Left");
-        if (input.isHeld(KeyEvent.VK_J)) player2.executeAction("Duck");
-        if (input.isHeld(KeyEvent.VK_K)) player2.executeAction("Right");
-        if (input.isHeld(KeyEvent.VK_M)) player2.executeAction("Punch");
+        if (input.isHeld(KeyEvent.VK_U)) character2.executeAction("Jump");
+        if (input.isHeld(KeyEvent.VK_H)) character2.executeAction("Left");
+        if (input.isHeld(KeyEvent.VK_J)) character2.executeAction("Duck");
+        if (input.isHeld(KeyEvent.VK_K)) character2.executeAction("Right");
+        if (input.isHeld(KeyEvent.VK_M)) character2.executeAction("Punch");
         if (input.isHeld(KeyEvent.VK_COMMA)) assert false : "Kick not implemented";
         if (input.isHeld(KeyEvent.VK_PERIOD)) assert false : "Special not implemented";
         // DEBUG: Remove this later
-        if (input.combo(KeyEvent.VK_J, KeyEvent.VK_K)) player2.executeAction("SDCombo");
+        if (player2.getInputProcesser().combo(KeyEvent.VK_J, KeyEvent.VK_K)) character2.executeAction("SDCombo");
 
         // Attack TTL
-        Deque<AttackHitbox> runningAttacks = player1.getRunningAttacks();
+        Deque<AttackHitbox> runningAttacks = character1.getRunningAttacks();
         if (!runningAttacks.isEmpty()){
             AttackHitbox hb = runningAttacks.getFirst();
             if (hb.isAlive()){
                 hb.decrease();
             }else {
-                player1.setInAction(false);
+                character1.setInAction(false);
                 runningAttacks.removeFirst();
             }
         }
 
-        runningAttacks = player2.getRunningAttacks();
+        runningAttacks = character2.getRunningAttacks();
         if (!runningAttacks.isEmpty()){
             AttackHitbox hb = runningAttacks.getFirst();
             if (hb.isAlive()){
                 hb.decrease();
             }else {
-                player2.setInAction(false);
+                character2.setInAction(false);
                 runningAttacks.removeFirst();
             }
         }
@@ -172,38 +177,45 @@ public class GamePanel extends JPanel {
         g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
+        // Background
         {
             bg.advanceFrame();
-            g2.drawImage(
-                    bg.getCurrentAnimationFrame(),
-                    0,
-                    0,
-                    null
-            );
+            BufferedImage sprite = bg.getCurrentAnimationFrame();
+            if (sprite != null){
+                g2.drawImage(
+                        sprite,
+                        0,
+                        0,
+                        null
+                );
+            }
         }
 
         // Player 1
         {
-            player1.advanceFrame();
+            character1.advanceFrame();
             // Sprite
-            g2.drawImage(
-                    player1.getCurrentFrame(),
-                    (int) player1.x,
-                    (int) player1.y,
-                    null);
+            BufferedImage sprite = character1.getCurrentFrame();
+            if (sprite != null){
+                g2.drawImage(
+                        sprite,
+                        (int) character1.x,
+                        (int) character1.y,
+                        null);
+            }
             g2.setColor(Color.BLUE);
             // Position
-            g2.drawRect((int) player1.x, (int) player1.y, 1, 1);
+            g2.drawRect((int) character1.x, (int) character1.y, 1, 1);
             // Hitbox
             g2.drawRect(
-                    (int) player1.x,
-                    (int) player1.y,
-                    (int) player1.hitbox.w,
-                    (int) player1.hitbox.h
+                    (int) character1.x,
+                    (int) character1.y,
+                    (int) character1.hitbox.w,
+                    (int) character1.hitbox.h
             );
 
             g2.setColor(Color.ORANGE);
-            AttackHitbox hb = player1.getCurrentAttackHitbox();
+            AttackHitbox hb = character1.getCurrentAttackHitbox();
             if (hb != null){
                 g2.drawRect(
                         (int) hb.x,
@@ -216,26 +228,29 @@ public class GamePanel extends JPanel {
 
         // Player 2
         {
-            player2.advanceFrame();
+            character2.advanceFrame();
             // Sprite
-            g2.drawImage(
-                    player2.getCurrentFrame(),
-                    (int) player2.x,
-                    (int) player2.y,
-                    null);
+            BufferedImage sprite = character2.getCurrentFrame();
+            if (sprite != null){
+                g2.drawImage(
+                        sprite,
+                        (int) character2.x,
+                        (int) character2.y,
+                        null);
+            }
             g2.setColor(Color.BLUE);
             // Position
-            // g2.drawRect((int) player2.x, (int) player2.y, 1, 1);
+            g2.drawRect((int) character2.x, (int) character2.y, 1, 1);
             // Hitbox
-            // g2.drawRect(
-            //         (int) player2.x,
-            //         (int) player2.y,
-            //         (int) player2.hitbox.w,
-            //         (int) player2.hitbox.h
-            // );
+            g2.drawRect(
+                    (int) character2.x,
+                    (int) character2.y,
+                    (int) character2.hitbox.w,
+                    (int) character2.hitbox.h
+            );
 
             g2.setColor(Color.ORANGE);
-            AttackHitbox hb = player2.getCurrentAttackHitbox();
+            AttackHitbox hb = character2.getCurrentAttackHitbox();
             if (hb != null){
                 g2.drawRect(
                         (int) hb.x,
