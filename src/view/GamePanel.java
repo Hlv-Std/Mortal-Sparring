@@ -63,12 +63,14 @@ public class GamePanel extends JPanel {
             } else {
                 character1.velX *= (1 - FRICTION * dt);
             }
+            if (Math.abs(character1.velX) < 10) character1.velX = 0;
 
             if (character2.isInAir()){
                 character2.velX *= (1 - FRICTION/2.3 * dt);
             } else {
                 character2.velX *= (1 - FRICTION * dt);
             }
+            if (Math.abs(character2.velX) < 10) character2.velX = 0;
 
             // Integrating
             character1.x += character1.velX * dt;
