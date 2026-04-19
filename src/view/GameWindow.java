@@ -17,8 +17,6 @@ public class GameWindow extends JFrame {
     private BackgroundLoader bgLoader;
     private Player player1;
     private Player player2;
-    private PlayerLoader playerLoader1;
-    private PlayerLoader playerLoader2;
 
     public GameWindow(){
         super("Mortal Sparring");
@@ -34,25 +32,20 @@ public class GameWindow extends JFrame {
     }
 
     private void initComponents(){
-        bg = new Background("Bagno", "Super");
-        bgLoader = new BackgroundLoader(bg, Path.of("./src/resources/backgrounds"));
-        bgLoader.loadAnimations();
+        bg = BackgroundLoader.loadAnimations("Cortile", Path.of("./src/resources/backgrounds"));
 
         // Preapre the player then add them to the game
-        player1 = new Player("Fazz");
-        player2 = new Player("Fazz");
+        player1 = new Player("Helvetica");
+        player1.setCharacter(PlayerLoader.loadAnimations("Pennacchi", Path.of("./src/resources/pennacchi"), false));
 
-        playerLoader1 = new PlayerLoader(player1, Path.of("./src/resources/fazz"));
-        playerLoader1.loadAnimations();
-        playerLoader2 = new PlayerLoader(player2, Path.of("./src/resources/fazz2"));
-        playerLoader2.loadAnimations();
+        player2 = new Player("Standard");
+        player2.setCharacter(PlayerLoader.loadAnimations("Fazz", Path.of("./src/resources/fazz"), true));
 
-        player1.x = (double) getWidth()  / 2;
-        player1.y = (double) getHeight() / 2;
+        player1.getCharacter().x = (double) getWidth()  / 2;
+        player1.getCharacter().y = (double) getHeight() / 2;
 
-        player2.x = (double) getWidth()  / 1.5;
-        player2.y = (double) getHeight() / 1.5;
-
+        player2.getCharacter().x = (double) getWidth()  / 1.5;
+        player2.getCharacter().y = (double) getHeight() / 1.5;
 
         gamePanel = new GamePanel(player1, player2, getWidth(), getHeight(), bg);
         setContentPane(gamePanel);
