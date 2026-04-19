@@ -6,14 +6,6 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.util.*;
 
-/*
- * TODO: Rewrite whole player
- * InputHandler must be per Giocatore and not for Player or GamePanel
- * Cleanup messy code and functions
- * Assert for player animations
- * Flip animations for player2
- */
-
 public class Character {
     // Name
     private String name;
