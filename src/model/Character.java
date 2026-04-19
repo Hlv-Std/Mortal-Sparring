@@ -1,14 +1,19 @@
 package model;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.util.*;
 
+/*
+ * TODO: Make attacks actually do something
+ * TODO: Create an Hit animation state and character state
+ * TODO: Create a Stunned animation state and character state
+ * TODO: Implement an AttackTrajectory: Follows a series of relative positions in determinated instants
+ */
 public class Character {
     // Name
-    private String name;
+    private final String name;
     // Position
     public double x,y;
     public double velX, velY;
@@ -17,14 +22,14 @@ public class Character {
     private boolean isInAir, isFalling, isDucking, isInAction;
     private int jumps;
     // Animations
-    private HashMap<CharacterAnimationState, HashMap<Integer, BufferedImage>> animations;
+    private final HashMap<CharacterAnimationState, HashMap<Integer, BufferedImage>> animations;
     private CharacterAnimationState animationState;
     private int animationFrameNumber;
     private static final int RESET_ANIMATION_THRESHOLD = 5;
     public int animationThreshold = RESET_ANIMATION_THRESHOLD;
     // Moves
-    private HashMap<String, ActionListener> moveset;
-    public Deque<AttackHitbox> runningAttacks;
+    private final HashMap<String, ActionListener> moveset;
+    public Deque<Attack> runningAttacks;
 
     public Character(String name){
         super();
@@ -94,7 +99,7 @@ public class Character {
         moveset.put("Punch", (_) -> {
             if (!isInAction){
                 isInAction = true;
-                runningAttacks.addLast(new AttackHitbox(x, y, new Rect(20, 20), 10, 8));
+                runningAttacks.addLast(new Attack(x, y, new Rect(20, 20), 10, 8));
             }
             if (!animationState.equals(CharacterAnimationState.Punching))
                 changeAnimation(CharacterAnimationState.Punching);
@@ -146,8 +151,8 @@ public class Character {
     }
     public int getAnimationFrameNumber(){ return animationFrameNumber; }
 
-    public Deque<AttackHitbox> getRunningAttacks(){ return runningAttacks; }
-    public AttackHitbox getCurrentAttackHitbox(){
+    public Deque<Attack> getRunningAttacks(){ return runningAttacks; }
+    public Attack getCurrentAttackHitbox(){
         if (runningAttacks.isEmpty())
             return null;
         return runningAttacks.getFirst();

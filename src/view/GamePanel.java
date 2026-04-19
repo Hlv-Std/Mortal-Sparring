@@ -10,6 +10,10 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.Deque;
 
+
+/*
+ * TODO: Pause Screen (Independent from who): Freeze dt
+ */
 public class GamePanel extends JPanel {
     private final int WIDTH;
     private final int HEIGHT;
@@ -124,10 +128,10 @@ public class GamePanel extends JPanel {
             character1.setFalling(character1.velY > 0);
             character1.setInAir(true);
         } else {
-          character1.setInAir(false);
-          character1.setFalling(false);
-          character1.resetJumps();
-          character1.setDucking(false);
+            character1.setInAir(false);
+            character1.setFalling(false);
+            character1.resetJumps();
+            character1.setDucking(false);
         }
 
         if (character2.y + character2.hitbox.h < GROUND) {
@@ -162,9 +166,9 @@ public class GamePanel extends JPanel {
         if (player2.getInputProcesser().combo(KeyEvent.VK_J, KeyEvent.VK_K)) character2.executeAction("SDCombo");
 
         // Attack TTL
-        Deque<AttackHitbox> runningAttacks = character1.getRunningAttacks();
+        Deque<Attack> runningAttacks = character1.getRunningAttacks();
         if (!runningAttacks.isEmpty()){
-            AttackHitbox hb = runningAttacks.getFirst();
+            Attack hb = runningAttacks.getFirst();
             if (hb.isAlive()){
                 hb.decrease();
             }else {
@@ -175,7 +179,7 @@ public class GamePanel extends JPanel {
 
         runningAttacks = character2.getRunningAttacks();
         if (!runningAttacks.isEmpty()){
-            AttackHitbox hb = runningAttacks.getFirst();
+            Attack hb = runningAttacks.getFirst();
             if (hb.isAlive()){
                 hb.decrease();
             }else {
@@ -186,19 +190,19 @@ public class GamePanel extends JPanel {
 
         // Reset Idle animation
         if (!character1.isInAir()    &&
-            !character1.isDucking()  &&
-            !character1.isInAction() &&
-            character1.velX == 0     &&
-            character1.velY == 0     &&
-            !character1.getAnimationState().equals(CharacterAnimationState.Idle))
+                !character1.isDucking()  &&
+                !character1.isInAction() &&
+                character1.velX == 0     &&
+                character1.velY == 0     &&
+                !character1.getAnimationState().equals(CharacterAnimationState.Idle))
             character1.changeAnimation(CharacterAnimationState.Idle);
 
         if (!character2.isInAir()    &&
-            !character2.isDucking()  &&
-            !character2.isInAction() &&
-            character2.velX == 0     &&
-            character2.velY == 0     &&
-            !character2.getAnimationState().equals(CharacterAnimationState.Idle))
+                !character2.isDucking()  &&
+                !character2.isInAction() &&
+                character2.velX == 0     &&
+                character2.velY == 0     &&
+                !character2.getAnimationState().equals(CharacterAnimationState.Idle))
             character2.changeAnimation(CharacterAnimationState.Idle);
     }
 
@@ -246,14 +250,16 @@ public class GamePanel extends JPanel {
             );
 
             g2.setColor(Color.ORANGE);
-            AttackHitbox hb = character1.getCurrentAttackHitbox();
-            if (hb != null){
-                g2.drawRect(
-                        (int) hb.x,
-                        (int) hb.y,
-                        (int) hb.hitbox.w,
-                        (int) hb.hitbox.h
-                );
+            if (character1.isInAction()){
+                Attack hb = character1.getCurrentAttackHitbox();
+                if (hb != null){
+                    g2.drawRect(
+                            (int) hb.x,
+                            (int) hb.y,
+                            (int) hb.hitbox.w,
+                            (int) hb.hitbox.h
+                    );
+                }
             }
         }
 
@@ -281,14 +287,16 @@ public class GamePanel extends JPanel {
             );
 
             g2.setColor(Color.ORANGE);
-            AttackHitbox hb = character2.getCurrentAttackHitbox();
-            if (hb != null){
-                g2.drawRect(
-                        (int) hb.x,
-                        (int) hb.y,
-                        (int) hb.hitbox.w,
-                        (int) hb.hitbox.h
-                );
+            if (character2.isInAction()){
+                Attack hb = character2.getCurrentAttackHitbox();
+                if (hb != null){
+                    g2.drawRect(
+                            (int) hb.x,
+                            (int) hb.y,
+                            (int) hb.hitbox.w,
+                            (int) hb.hitbox.h
+                    );
+                }
             }
         }
 

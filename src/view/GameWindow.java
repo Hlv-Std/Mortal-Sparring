@@ -8,10 +8,10 @@ import model.Player;
 import javax.swing.*;
 import java.nio.file.Path;
 
-// TODO: Main Menu
-// TODO: Character select
-
-
+/*
+ * TODO: Switch up panes
+ * TODO: Handle buttons out of player movement (Esc, Input for name choosing)
+ */
 public class GameWindow extends JFrame {
     private static final int DEF_WIDTH = 701;
     private static final int DEF_HEIGHT = 401;
