@@ -1,6 +1,7 @@
 package controller;
 
 import model.Background;
+import model.CharacterAnimationState;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -8,63 +9,47 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BackgroundLoader {
-    private Background background;
-    private Path backgroundDirectory;
-
-    public BackgroundLoader(Background background, Path backgroundDirectory){
-        this.background = background;
-        this.backgroundDirectory = backgroundDirectory;
-    }
-
-    public void setBackground(Background background) {
-        this.background = background;
-    }
-
-    public void loadAnimations(){
+    public static Background loadAnimations(String name, Path backgroundDirectory){
+        Background background = new Background(name);
         try {
             Files.walk(backgroundDirectory).forEach((path -> {
                 if (Files.isRegularFile(path)){
                     String[] fileData = path.getFileName().toString().split("_");
                     String bgName = fileData[0];
-                    String bgType = fileData[1];
-                    // String animationNumber = fileData[2];
+                    String animationNumber = fileData[1].split("\\.")[0];
 
-                    if (!bgName.equalsIgnoreCase(background.getName()))
+                    if (!bgName.equalsIgnoreCase(name))
                         return; // Wrong file
 
-                    if (!bgType.equalsIgnoreCase(background.getType())){
-                        return; // Wrong type
-                    }
-
-                    List<BufferedImage> sprites = background.getSprites();
+                    Map<Integer, BufferedImage> sprites = background.getFrames();
                     if (sprites == null)
                         return; // Inexistent animation
 
-                    BufferedImage sprite = loadImageFromDisk(path);
+                    BufferedImage sprite;
+                    try {
+                        sprite =  ImageIO.read(path.toFile());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                     if (sprite == null)
                         return; // Error loading image from disk
 
-                    BufferedImage scaled = new BufferedImage(701, 401, BufferedImage.TYPE_INT_ARGB);
+                    BufferedImage scaled = new BufferedImage(1920, 1080, BufferedImage.TYPE_INT_ARGB);
                     Graphics2D g = scaled.createGraphics();
                     g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
                     g.drawImage(sprite, 0, 0, 701, 401, null);
                     g.dispose();
-                    sprites.add(scaled);
+                    sprites.put(Integer.parseInt(animationNumber), scaled);
                 }
             }));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private BufferedImage loadImageFromDisk(Path filename){
-        try {
-            return ImageIO.read(filename.toFile());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        System.out.printf("Loaded background: %s\n", name);
+        return background;
     }
 }
