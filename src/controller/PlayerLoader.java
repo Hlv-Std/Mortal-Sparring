@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
+import java.util.Map;
 
 public class PlayerLoader {
     public static Character loadAnimations(String name, Path playerDirectory, boolean mirror){
@@ -20,11 +20,12 @@ public class PlayerLoader {
                     String[] fileData = path.getFileName().toString().split("_");
                     String playerName = fileData[0];
                     String animationName = fileData[1];
-                    // String animationNumber = fileData[2];
+                    String animationNumber = fileData[2].split("\\.")[0];
 
                     if (!playerName.equalsIgnoreCase(character.getName()))
                         return; // Wrong file
 
+                    Map<Integer, BufferedImage> frames = character.getFrames(CharacterAnimationState.valueOf(animationName));
                     if (frames == null)
                         return; // Inexistent animation
 
@@ -40,9 +41,13 @@ public class PlayerLoader {
                     BufferedImage scaled = new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB);
                     Graphics2D g = scaled.createGraphics();
                     g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-                    g.drawImage(sprite, 0, 0, 100, 100, null);
+                    if (mirror){
+                        g.drawImage(sprite, 100, 0, -100, 100, null);
+                    } else {
+                        g.drawImage(sprite, 0, 0, 100, 100, null);
+                    }
                     g.dispose();
-                    frames.add(scaled);
+                    frames.put(Integer.parseInt(animationNumber), scaled);
                 }
             }));
         } catch (IOException e) {
