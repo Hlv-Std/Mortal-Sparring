@@ -1,6 +1,7 @@
 package controller;
 
-import model.Player;
+import model.Character;
+import model.CharacterAnimationState;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -11,20 +12,8 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class PlayerLoader {
-    private Player player;
-    private Path playerDirectory;
-
-    public PlayerLoader(Player player, Path playerDirectory){
-        this.player = player;
-        this.playerDirectory = playerDirectory;
-    }
-
-    public void setPlayer(Player player, Path path){
-        this.player = player;
-        this.playerDirectory = path;
-    }
-
-    public void loadAnimations(){
+    public static Character loadAnimations(String name, Path playerDirectory, boolean mirror){
+        Character character = new Character(name);
         try {
             Files.walk(playerDirectory).forEach((path -> {
                 if (Files.isRegularFile(path)){
@@ -33,14 +22,18 @@ public class PlayerLoader {
                     String animationName = fileData[1];
                     // String animationNumber = fileData[2];
 
-                    if (!playerName.equalsIgnoreCase(player.getName()))
+                    if (!playerName.equalsIgnoreCase(character.getName()))
                         return; // Wrong file
 
-                    List<BufferedImage> frames = player.getFrames(animationName);
                     if (frames == null)
                         return; // Inexistent animation
 
-                    BufferedImage sprite = loadImageFromDisk(path);
+                    BufferedImage sprite;
+                    try {
+                        sprite = ImageIO.read(path.toFile());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                     if (sprite == null)
                         return; // Error loading image from disk
 
@@ -55,13 +48,7 @@ public class PlayerLoader {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private BufferedImage loadImageFromDisk(Path filename){
-        try {
-            return ImageIO.read(filename.toFile());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        System.out.printf("Loaded %s: %d frames\n", name, character.getFrames(CharacterAnimationState.Idle).size());
+        return character;
     }
 }
