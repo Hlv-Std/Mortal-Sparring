@@ -1,5 +1,7 @@
 package controller;
 
+import model.Player;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -8,47 +10,24 @@ import java.util.Deque;
 import java.util.HashSet;
 import java.util.Set;
 
-// TODO: make this player dependant (maybe Player extend JComponent?)
 public class InputHandler {
-    private JComponent component;
-    private Set<Integer> keysHeld;
-   private InputMap inputMap;
-   private ActionMap actionMap;
+    private final Player player1;
+    private final Player player2;
 
-    private final Deque<Integer> buffer;
-    private long lastInputTime;
-    private static final long COMBO_WINDOW_MS = 100;
+    private final Set<Integer> keysHeld;
+    private final InputMap inputMap;
+    private final ActionMap actionMap;
 
-    public InputHandler(JComponent component){
-        this.component = component;
+    public InputHandler(JComponent component, Player player1, Player player2){
+        this.player1 = player1;
+        this.player2 = player2;
         keysHeld       = new HashSet<>();
-        buffer         = new ArrayDeque<>();
-        lastInputTime  = 0;
         inputMap       = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         actionMap      = component.getActionMap();
     }
 
-    private void checkCombo(int keyCode){
-        long now = System.currentTimeMillis();
-        if (now - lastInputTime > COMBO_WINDOW_MS)
-            buffer.clear();
-        buffer.addLast(keyCode);
-        lastInputTime = now;
-        if (buffer.size() > 10) buffer.removeFirst();
-    }
-
-    public boolean combo(int... combo){
-        if (buffer.size() < combo.length) return false;
-        Integer[] tail = buffer.toArray(new Integer[0]);
-        int offset = tail.length - combo.length;
-        for(int i = 0; i < combo.length; i++){
-            if (tail[offset + i] != combo[i]) return false;
-        }
-        return true;
-    }
-
     public void start(){
-        for(int keyCode : getKeys()){
+        for(int keyCode : getP1Keys()){
             String pressed = "pressed_" + keyCode;
             String released = "released_" + keyCode;
 
@@ -59,7 +38,28 @@ public class InputHandler {
             actionMap.put(pressed, new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    checkCombo(keyCode);
+                    player1.getInputProcesser().checkCombo(keyCode);
+                    keysHeld.add(keyCode);
+                }
+            });
+            actionMap.put(released, new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) { keysHeld.remove(keyCode); }
+            });
+        }
+
+        for(int keyCode : getP2Keys()){
+            String pressed = "pressed_" + keyCode;
+            String released = "released_" + keyCode;
+
+            inputMap.put(KeyStroke.getKeyStroke(keyCode, 0, false), pressed);
+            inputMap.put(KeyStroke.getKeyStroke(keyCode, 0, true), released);
+
+
+            actionMap.put(pressed, new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    player2.getInputProcesser().checkCombo(keyCode);
                     keysHeld.add(keyCode);
                 }
             });
@@ -75,16 +75,30 @@ public class InputHandler {
         return keysHeld.contains(keyCode);
     }
 
-    private int[] getKeys(){
+    private int[] getP1Keys(){
         return new int[]{
-        //        Player 1       Player 2
-                KeyEvent.VK_W, KeyEvent.VK_U,
-                KeyEvent.VK_A, KeyEvent.VK_H,
-                KeyEvent.VK_S, KeyEvent.VK_J,
-                KeyEvent.VK_D, KeyEvent.VK_K,
-                KeyEvent.VK_X, KeyEvent.VK_M,
-                KeyEvent.VK_C, KeyEvent.VK_COMMA,
-                KeyEvent.VK_V, KeyEvent.VK_PERIOD
+                KeyEvent.VK_W,
+                KeyEvent.VK_A,
+                KeyEvent.VK_S,
+                KeyEvent.VK_D,
+                KeyEvent.VK_X,
+                KeyEvent.VK_C,
+                KeyEvent.VK_V
         };
     }
+
+    private int[] getP2Keys(){
+       return new int[] {
+               KeyEvent.VK_U,
+               KeyEvent.VK_H,
+               KeyEvent.VK_J,
+               KeyEvent.VK_K,
+               KeyEvent.VK_M,
+               KeyEvent.VK_COMMA,
+               KeyEvent.VK_PERIOD
+       };
+    }
 }
+
+
+
