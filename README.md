@@ -3,26 +3,31 @@
 A mortal kombat clone made as a school project
 
 # Roadmap
+
 - [x] Player animations loader
-- [!] Launch thread separately from the Event Dispatch Thread (very laggy)
 - [/] Player movement
-    - [ ] Latency-free input
-    - [ ] Short jump and high jump
-    - [ ] Improve Gravity and Friction values to be consistent with the game
-    - [/] Implement Hitboxes
-        - [ ] Damage hitboxes
-        - [/] Player hitboxes
-    - [ ] Player moveset
-- [ ] Backgrounds
-    - [ ] Static backgrounds
-    - [ ] Animated backgrounds
-    - [ ] Cromatic abberrations
-- [ ] Move everything out of Player and manage Player in another Class like `Giocatore`
-- [ ] Animations
-    - [ ] Animation cancel
-- [ ] Second player
+  - [x] Latency-free input
+  - [?] Short jump and high jump
+  - [x] Improve Gravity and Friction values to be consistent with the game
+  - [/] Implement Hitboxes
+    - [ ] Damage hitboxes
+    - [x] Player hitboxes
+  - [x] Player moveset
+  - [ ] Damage
+- [ ] Attacks
+  - [ ] Hitbox
+- [/] Backgrounds
+  - [x] Static backgrounds
+  - [x] Animated backgrounds
+  - [ ] Cromatic abberrations
+- [/] Animations
+  - [ ] Animation cancel
+- [x] Second player
+- [ ] UI
 - [ ] Main menu
+- [ ] Character select
+- [ ] Timer
+- [ ] Top 3 wins
+- [ ] Winner scene
 - [ ] Music
 - [ ] Controller support
-
-
