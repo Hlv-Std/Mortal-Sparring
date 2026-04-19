@@ -1,26 +1,23 @@
 package model;
 
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Background {
-    private String name;
-    private String type;
+    private final String name;
     private int animationFrameNumber;
-    private List<BufferedImage> sprites;
+    private Map<Integer, BufferedImage> frames;
 
-    public Background(String name, String type){
+    public Background(String name){
         this.name            = name;
-        this.type            = type;
         animationFrameNumber = 0;
-        sprites              = new ArrayList<>();
+        frames               = new HashMap<>();
     }
 
     public String getName(){ return name; }
-    public String getType(){ return type; }
 
-    public void advanceFrame(){ animationFrameNumber = (animationFrameNumber + 1) % sprites.size(); }
-    public List<BufferedImage> getSprites(){ return sprites; }
-    public BufferedImage getCurrentAnimationFrame(){ return sprites.get(animationFrameNumber); }
+    public void advanceFrame(){ animationFrameNumber = (animationFrameNumber + 1) % frames.size(); }
+    public Map<Integer, BufferedImage> getFrames(){ return frames; }
+    public BufferedImage getCurrentAnimationFrame(){ return frames.get(animationFrameNumber); }
 }
