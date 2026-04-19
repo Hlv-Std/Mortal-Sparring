@@ -72,6 +72,16 @@ public class GamePanel extends JPanel {
             }
             if (Math.abs(character2.velX) < 10) character2.velX = 0;
 
+            if (character1.x > character2.x){
+                character1.velX = 0;
+                character1.x--;
+            }
+
+            if (character2.x < character1.x){
+                character2.velX = 0;
+                character2.x++;
+            }
+
             // Integrating
             character1.x += character1.velX * dt;
             character1.y += character1.velY * dt;
