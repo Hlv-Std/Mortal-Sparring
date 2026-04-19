@@ -183,6 +183,23 @@ public class GamePanel extends JPanel {
                 runningAttacks.removeFirst();
             }
         }
+
+        // Reset Idle animation
+        if (!character1.isInAir()    &&
+            !character1.isDucking()  &&
+            !character1.isInAction() &&
+            character1.velX == 0     &&
+            character1.velY == 0     &&
+            !character1.getAnimationState().equals(CharacterAnimationState.Idle))
+            character1.changeAnimation(CharacterAnimationState.Idle);
+
+        if (!character2.isInAir()    &&
+            !character2.isDucking()  &&
+            !character2.isInAction() &&
+            character2.velX == 0     &&
+            character2.velY == 0     &&
+            !character2.getAnimationState().equals(CharacterAnimationState.Idle))
+            character2.changeAnimation(CharacterAnimationState.Idle);
     }
 
     @Override
