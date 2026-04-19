@@ -1,12 +1,12 @@
 package model;
 
-public class AttackHitbox {
+public class Attack {
     public double x, y;
     public Rect hitbox;
     public double damage;
     private int duration;
 
-    public AttackHitbox(double x, double y, Rect hitbox, double damage, int duration){
+    public Attack(double x, double y, Rect hitbox, double damage, int duration){
         this.x = x;
         this.y = y;
         this.hitbox = hitbox;
