@@ -36,7 +36,8 @@ public class GameWindow extends JFrame {
     }
 
     private void initComponents(){
-        bg = BackgroundLoader.loadAnimations("Cortile", Path.of("./src/resources/backgrounds"));
+        // TODO: Refactor this over the ChracterSelectPanel
+        bg = BackgroundLoader.loadAnimations("CortileAI", Path.of("./src/resources/backgrounds"));
 
         // Preapre the player then add them to the game
         player1 = new Player("Helvetica");
