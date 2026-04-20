@@ -13,10 +13,11 @@ import java.nio.file.Path;
 import java.util.Map;
 
 public class PlayerLoader {
-    public static Player loadAnimations(String playerName, String characterName, Path playerDirectory, boolean mirror){
+    public static Player loadAnimations(String playerName, String characterName, boolean mirror){
         Player player = new Player(playerName);
         player.setCharacter(new Character(characterName));
         Character character = player.getCharacter();
+        Path playerDirectory = Path.of("./src/resources/Characters/" + characterName);
         try {
             Files.walk(playerDirectory).forEach((path -> {
                 if (Files.isRegularFile(path)){

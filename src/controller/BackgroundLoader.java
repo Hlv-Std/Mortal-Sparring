@@ -2,6 +2,7 @@ package controller;
 
 import model.Background;
 import model.CharacterAnimationState;
+import model.GameState;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -13,8 +14,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BackgroundLoader {
-    public static Background loadAnimations(String name, Path backgroundDirectory){
+    public static Background loadAnimations(String name){
         Background background = new Background(name);
+        Path backgroundDirectory = Path.of("./src/resources/backgrounds/" + name);
         try {
             Files.walk(backgroundDirectory).forEach((path -> {
                 if (Files.isRegularFile(path)){
@@ -38,10 +40,10 @@ public class BackgroundLoader {
                     if (sprite == null)
                         return; // Error loading image from disk
 
-                    BufferedImage scaled = new BufferedImage(1920, 1080, BufferedImage.TYPE_INT_ARGB);
+                    BufferedImage scaled = new BufferedImage(2560, 1440, BufferedImage.TYPE_INT_ARGB);
                     Graphics2D g = scaled.createGraphics();
                     g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-                    g.drawImage(sprite, 0, 0, 701, 401, null);
+                    g.drawImage(sprite, 0, 0, GameState.getInstance().getWindowWidth(), GameState.getInstance().getWindowHeight(), null);
                     g.dispose();
                     sprites.put(Integer.parseInt(animationNumber), scaled);
                 }
