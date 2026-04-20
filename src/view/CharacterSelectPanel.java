@@ -19,21 +19,19 @@ public class CharacterSelectPanel extends JPanel {
         requestFocusInWindow();
 
         GameState gameState = GameState.getInstance();
-        gameState.setBg(BackgroundLoader.loadAnimations("CortileAI", Path.of("./src/resources/backgrounds")));
+        gameState.setBg(BackgroundLoader.loadAnimations("CortileAI"));
 
         // Preapre the player then add them to the game
         gameState.setPlayer1(
                 PlayerLoader.loadAnimations(
                         "Helvetica",
                         "Pennacchi",
-                        Path.of("./src/resources/pennacchi"),
                         false));
 
         gameState.setPlayer2(
                 PlayerLoader.loadAnimations(
                         "Standard",
                         "Fazz",
-                        Path.of("./src/resources/fazz"),
                         true));
 
         gameState.getPlayer1().getCharacter().x = (double) getWidth()  / 2;
