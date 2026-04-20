@@ -180,20 +180,20 @@ public class GamePanel extends JPanel {
         if (input.isHeld(KeyEvent.VK_S)) character1.executeAction("Duck");
         if (input.isHeld(KeyEvent.VK_D)) character1.executeAction("Right");
         if (input.isHeld(KeyEvent.VK_X)) character1.executeAction("Punch");
-        if (input.isHeld(KeyEvent.VK_C)) assert false : "Kick not implemented";
-        if (input.isHeld(KeyEvent.VK_V)) assert false : "Special not implemented";
+        if (input.isHeld(KeyEvent.VK_C)) character1.executeAction("Kick");
+        if (input.isHeld(KeyEvent.VK_V)) character1.executeAction("Special1");
         // DEBUG: Remove this later
         if (player1.getInputProcesser().combo(KeyEvent.VK_S, KeyEvent.VK_D)) character1.executeAction("SDCombo");
 
-        if (input.isHeld(KeyEvent.VK_U)) character2.executeAction("Jump");
-        if (input.isHeld(KeyEvent.VK_H)) character2.executeAction("Left");
-        if (input.isHeld(KeyEvent.VK_J)) character2.executeAction("Duck");
-        if (input.isHeld(KeyEvent.VK_K)) character2.executeAction("Right");
-        if (input.isHeld(KeyEvent.VK_M)) character2.executeAction("Punch");
-        if (input.isHeld(KeyEvent.VK_COMMA)) assert false : "Kick not implemented";
-        if (input.isHeld(KeyEvent.VK_PERIOD)) assert false : "Special not implemented";
+        if (input.isHeld(KeyEvent.VK_U))      character2.executeAction("Jump");
+        if (input.isHeld(KeyEvent.VK_H))      character2.executeAction("Left");
+        if (input.isHeld(KeyEvent.VK_J))      character2.executeAction("Duck");
+        if (input.isHeld(KeyEvent.VK_K))      character2.executeAction("Right");
+        if (input.isHeld(KeyEvent.VK_M))      character2.executeAction("Punch");
+        if (input.isHeld(KeyEvent.VK_COMMA))  character2.executeAction("Kick");
+        if (input.isHeld(KeyEvent.VK_PERIOD)) character2.executeAction("Special1");
         // DEBUG: Remove this later
-        if (player2.getInputProcesser().combo(KeyEvent.VK_J, KeyEvent.VK_K)) character2.executeAction("SDCombo");
+        if (player2.getInputProcesser().combo(KeyEvent.VK_J, KeyEvent.VK_H)) character2.executeAction("SDCombo");
 
         // Attacks
         Deque<Attack> runningAttacks = character1.getRunningAttacks();
