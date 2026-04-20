@@ -90,5 +90,7 @@ public class GameWindow extends JFrame implements KeyListener {
     public void keyReleased(KeyEvent e) {}
     static void main() throws InterruptedException {
         SwingUtilities.invokeLater(GameWindow::new);
+        GameState.getInstance().waitForQuit();
+        System.exit(0);
     }
 }

@@ -16,6 +16,7 @@ public class GameState {
     private boolean contextHasChanged;
 
     private GameState(){}
+    private boolean quit = false;
 
     public static synchronized GameState getInstance(){
         if (instance == null)
@@ -41,6 +42,10 @@ public class GameState {
     public int getWindowHeight(){ return windowHeight; }
     public boolean checkForChanges(){ return contextHasChanged; }
     public boolean isFullscreen(){ return isFullscreen; }
+    public synchronized void waitForQuit() throws InterruptedException {
+        while(!quit)
+            wait();
+    }
 
     public synchronized void setPlayer1(Player player1) { this.player1 = player1; }
     public synchronized void setPlayer2(Player player2) { this.player2 = player2; }
@@ -48,4 +53,8 @@ public class GameState {
     public synchronized void setWindowWidth(int windowWidth){ this.windowWidth = windowWidth; }
     public synchronized void setWindowHeight(int windowHeight){ this.windowHeight = windowHeight; }
     public synchronized void ok(){ contextHasChanged = false; }
+    public synchronized void quit(){
+        quit = true;
+        notifyAll();
+    }
 }
