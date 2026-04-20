@@ -29,6 +29,7 @@ public class InputProcesser {
         for(int i = 0; i < combo.length; i++){
             if (tail[offset + i] != combo[i]) return false;
         }
+        buffer.clear();
         return true;
     }
 
