@@ -113,7 +113,7 @@ public class Character {
                 changeAnimation(CharacterAnimationState.Special1);
         });
         // DEBUG: Add test combo
-        moveset.put("SDCombo", (_) -> velX = 800);
+        moveset.put("SDCombo", (_) -> velX = 8000);
     }
 
     public String getName(){ return name; }
