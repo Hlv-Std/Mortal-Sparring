@@ -1,8 +1,11 @@
 package view;
 
-import model.Player;
+import controller.BackgroundLoader;
+import controller.PlayerLoader;
+import model.GameState;
 
 import javax.swing.*;
+import java.nio.file.Path;
 
 /*
  * TODO: UI for selecting the characters
@@ -10,11 +13,34 @@ import javax.swing.*;
  * TODO: Show loading screen before loading assets (pre choice and post)
  */
 public class CharacterSelectPanel extends JPanel {
-    private Player player1;
-    private Player player2;
+    public CharacterSelectPanel(){
+        super();
+        setFocusable(true);
+        requestFocusInWindow();
 
-    public CharacterSelectPanel(Player player1, Player player2){
-        this.player1 = player1;
-        this.player2 = player2;
+        GameState gameState = GameState.getInstance();
+        gameState.setBg(BackgroundLoader.loadAnimations("CortileAI", Path.of("./src/resources/backgrounds")));
+
+        // Preapre the player then add them to the game
+        gameState.setPlayer1(
+                PlayerLoader.loadAnimations(
+                        "Helvetica",
+                        "Pennacchi",
+                        Path.of("./src/resources/pennacchi"),
+                        false));
+
+        gameState.setPlayer2(
+                PlayerLoader.loadAnimations(
+                        "Standard",
+                        "Fazz",
+                        Path.of("./src/resources/fazz"),
+                        true));
+
+        gameState.getPlayer1().getCharacter().x = (double) getWidth()  / 2;
+        gameState.getPlayer1().getCharacter().y = (double) getHeight() / 2;
+
+        gameState.getPlayer2().getCharacter().x = (double) getWidth()  / 1.5;
+        gameState.getPlayer2().getCharacter().y = (double) getHeight() / 1.5;
+
     }
 }

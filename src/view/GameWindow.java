@@ -6,16 +6,21 @@ import model.Background;
 import model.Player;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.nio.file.Path;
 
 /*
  * TODO: Switch up panes
  * TODO: Handle buttons out of player movement (Esc, Input for name choosing)
  */
-public class GameWindow extends JFrame {
+public class GameWindow extends JFrame implements KeyListener {
     private static final int DEF_WIDTH = 701;
     private static final int DEF_HEIGHT = 401;
 
+    private MainMenuPanel mainMenuPanel;
+    private CharacterSelectPanel characterSelectPanel;
     private GamePanel gamePanel;
     private Background bg;
     private BackgroundLoader bgLoader;
@@ -29,32 +34,56 @@ public class GameWindow extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        initComponents();
-        loadLayout();
+        gameState = GameState.getInstance();
+        gameState.setWindowWidth(getWidth());
+        gameState.setWindowWidth(getHeight());
 
+        GraphicsEnvironment graphics = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice device = graphics.getDefaultScreenDevice();
+        device.setFullScreenWindow(this);
+        
+        loadMainMenuPanel();
+
+        addKeyListener(this);
         setVisible(true);
     }
 
-    private void initComponents(){
-        // TODO: Refactor this over the ChracterSelectPanel
-        bg = BackgroundLoader.loadAnimations("CortileAI", Path.of("./src/resources/backgrounds"));
-
-        // Preapre the player then add them to the game
-        player1 = new Player("Helvetica");
-        player1.setCharacter(PlayerLoader.loadAnimations("Pennacchi", Path.of("./src/resources/pennacchi"), false));
-
-        player2 = new Player("Standard");
-        player2.setCharacter(PlayerLoader.loadAnimations("Fazz", Path.of("./src/resources/fazz"), true));
-
-        player1.getCharacter().x = (double) getWidth()  / 2;
-        player1.getCharacter().y = (double) getHeight() / 2;
-
-        player2.getCharacter().x = (double) getWidth()  / 1.5;
-        player2.getCharacter().y = (double) getHeight() / 1.5;
-
-        gamePanel = new GamePanel(player1, player2, getWidth(), getHeight(), bg);
-        setContentPane(gamePanel);
+    private void loadMainMenuPanel(){
+        mainMenuPanel = new MainMenuPanel();
+        setContentPane(mainMenuPanel);
+        revalidate();
+        repaint();
     }
 
-    private void loadLayout(){}
+    private void loadCharacterSelectPanel(){
+        characterSelectPanel = new CharacterSelectPanel();
+        setContentPane(characterSelectPanel);
+        revalidate();
+        repaint();
+    }
+
+    private void loadGamePanel(){
+        gamePanel = new GamePanel();
+        setContentPane(gamePanel);
+        revalidate();
+        repaint();
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {}
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        Container currentPane = getContentPane();
+        if (currentPane.equals(mainMenuPanel)){
+            System.out.println("Passing to character select");
+            loadCharacterSelectPanel();
+        }else if (currentPane.equals(characterSelectPanel)){
+            System.out.println("Passing to game");
+            loadGamePanel();
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {}
 }
