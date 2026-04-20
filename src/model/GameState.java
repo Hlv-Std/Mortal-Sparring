@@ -10,13 +10,24 @@ public class GameState {
     private Player player2;
     private Background bg;
 
+    public static final int WINDOWED_WIDTH = 701;
+    public static final int WINDOWED_HEIGHT = 401;
+    public static int SCREEN_WIDTH;
+    public static int SCREEN_HEIGHT;
     private int windowWidth;
     private int windowHeight;
     private boolean isFullscreen;
-    private boolean contextHasChanged;
+    private boolean windowHasChanged;
 
     private boolean isPaused = false;
     private boolean quit = false;
+
+    private GameState(){
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        Dimension d = toolkit.getScreenSize();
+        SCREEN_WIDTH = d.width;
+        SCREEN_HEIGHT = d.height;
+    }
 
     public static synchronized GameState getInstance(){
         if (instance == null)
@@ -31,7 +42,16 @@ public class GameState {
         GraphicsEnvironment.getLocalGraphicsEnvironment()
                 .getDefaultScreenDevice()
                 .setFullScreenWindow(flag ? window : null);
-        contextHasChanged = true;
+
+        if (flag){
+            windowWidth = SCREEN_WIDTH;
+            windowHeight = SCREEN_HEIGHT;
+        } else {
+            windowWidth = WINDOWED_WIDTH;
+            windowHeight = WINDOWED_HEIGHT;
+        }
+
+        windowHasChanged = true;
         isFullscreen = flag;
     }
 
@@ -40,7 +60,7 @@ public class GameState {
     public Background getBg() { return bg; }
     public int getWindowWidth(){ return windowWidth; }
     public int getWindowHeight(){ return windowHeight; }
-    public boolean checkForChanges(){ return contextHasChanged; }
+    public boolean windowHasChanged(){ return windowHasChanged; }
     public boolean isFullscreen(){ return isFullscreen; }
     public boolean isPaused(){ return isPaused; }
     public synchronized void waitForQuit() throws InterruptedException {

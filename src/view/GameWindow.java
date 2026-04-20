@@ -12,9 +12,6 @@ import java.awt.event.KeyListener;
  * TODO: Handle buttons out of player movement (Esc, Input for name choosing)
  */
 public class GameWindow extends JFrame implements KeyListener {
-    private static final int WINDOWED_WIDTH = 701;
-    private static final int WINDOWED_HEIGHT = 401;
-
     private MainMenuPanel mainMenuPanel;
     private CharacterSelectPanel characterSelectPanel;
     private GamePanel gamePanel;
@@ -26,17 +23,15 @@ public class GameWindow extends JFrame implements KeyListener {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension d = toolkit.getScreenSize();
 
-        setSize(WINDOWED_WIDTH, WINDOWED_HEIGHT);
+        setSize(GameState.WINDOWED_WIDTH, GameState.WINDOWED_HEIGHT);
         setResizable(false);
-        dispose();
         setUndecorated(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-
         gameState = GameState.getInstance();
-        gameState.setWindowWidth(d.width);
-        gameState.setWindowHeight(d.height);
+        gameState.setWindowWidth(GameState.WINDOWED_WIDTH);
+        gameState.setWindowHeight(GameState.WINDOWED_HEIGHT);
         gameState.setWindowFullscreen(this, true);
 
         loadMainMenuPanel();

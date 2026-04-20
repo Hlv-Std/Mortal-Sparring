@@ -41,7 +41,7 @@ public class GamePanel extends JPanel {
         this.WIDTH      = gameState.getWindowWidth();
         this.HEIGHT     = gameState.getWindowHeight();
         this.bg         = gameState.getBg();
-        GROUND          = (double) HEIGHT - 81;
+        GROUND          = (double) HEIGHT - (double) HEIGHT / 5;
         input           = new InputHandler(this, player1, player2);
 
         pauseScreen = new BufferedImage(
@@ -139,11 +139,11 @@ public class GamePanel extends JPanel {
     }
 
     private void update(){
-        if (gameState.checkForChanges()){
+        if (gameState.windowHasChanged()){
             bg = BackgroundLoader.loadAnimations(bg.getName());
             this.WIDTH      = gameState.getWindowWidth();
             this.HEIGHT     = gameState.getWindowHeight();
-            GROUND          = (double) HEIGHT - 81;
+            GROUND          = (double) HEIGHT - (double) HEIGHT / 5;
             gameState.ok();
         }
 
