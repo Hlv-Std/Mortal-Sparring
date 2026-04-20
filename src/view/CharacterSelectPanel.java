@@ -10,7 +10,7 @@ import java.nio.file.Path;
 /*
  * TODO: UI for selecting the characters
  * TODO: Load the resources to the Players (Refactor code in GameWindow)
- * TODO: Show loading screen before loading assets (pre choice and post)
+ * TODO: Show loading screen before loading assets (pre choice and post, if needed)
  */
 public class CharacterSelectPanel extends JPanel {
     public CharacterSelectPanel(){
