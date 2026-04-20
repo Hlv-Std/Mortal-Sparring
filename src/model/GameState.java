@@ -24,9 +24,10 @@ public class GameState {
     public int getWindowWidth(){ return windowWidth; }
     public int getWindowHeight(){ return windowHeight; }
 
-    public void setPlayer1(Player player1) { this.player1 = player1; }
-    public void setPlayer2(Player player2) { this.player2 = player2; }
-    public void setBg(Background bg) { this.bg = bg; }
-    public void setWindowWidth(int windowWidth){ this.windowWidth = windowWidth; }
-    public void setWindowHeight(int windowHeight){ this.windowHeight = windowHeight; }
+    public synchronized void setPlayer1(Player player1) { this.player1 = player1; }
+    public synchronized void setPlayer2(Player player2) { this.player2 = player2; }
+    public synchronized void setBg(Background bg) { this.bg = bg; }
+    public synchronized void setWindowWidth(int windowWidth){ this.windowWidth = windowWidth; }
+    public synchronized void setWindowHeight(int windowHeight){ this.windowHeight = windowHeight; }
+    public synchronized void ok(){ contextHasChanged = false; }
 }
