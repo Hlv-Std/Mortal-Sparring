@@ -15,7 +15,7 @@ import java.util.Map;
 public class PlayerLoader {
     public static Player loadAnimations(String playerName, String characterName, boolean mirror){
         Player player = new Player(playerName);
-        player.setCharacter(new Character(characterName));
+        player.setCharacter(new Character(characterName, !mirror));
         Character character = player.getCharacter();
         Path playerDirectory = Path.of("./src/resources/Characters/" + characterName);
         try {

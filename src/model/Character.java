@@ -18,9 +18,12 @@ public class Character {
     public double x,y;
     public double velx, vely;
     public Rect hitbox;
-    private boolean isInAir, isFalling, isDucking, isInAction;
+    // Info
+    private boolean isInAir, isFalling, isDucking, isInAction, isInvincible, isAlive;
+    private int iframesCounter;
     private int jumps;
     private int health;
+    private final boolean leftPlayer;
     // Animations
     private final HashMap<CharacterAnimationState, HashMap<Integer, BufferedImage>> animations;
     private CharacterAnimationState animationState;
@@ -31,9 +34,10 @@ public class Character {
     private final HashMap<String, ActionListener> moveset;
     public Deque<Attack> runningAttacks;
 
-    public Character(String name){
+    public Character(String name, boolean leftPlayer){
         super();
         this.name            = name;
+        this.leftPlayer      = leftPlayer;
         x                    = 0;
         y                    = 0;
         velx                 = 0;
@@ -103,10 +107,27 @@ public class Character {
         moveset.put("Punch", (_) -> {
             if (!isInAction){
                 isInAction = true;
-                runningAttacks.addLast(new Attack(x, y, new Rect(20, 20), 10, 8));
+                // TODO: move in variables parameters that change between left player and right player
+                if (leftPlayer){
+                    runningAttacks.addLast(new Attack(
+                            this,
+                            hitbox.w - 10,
+                            (hitbox.h/2) - 20,
+                            new Rect(20, 20),
+                            5,
+                            16));
+                }else {
+                    runningAttacks.addLast(new Attack(
+                            this,
+                            -10,
+                            (hitbox.h/2) - 20,
+                            new Rect(20, 20),
+                            5,
+                            16));
+                }
+                if (!animationState.equals(CharacterAnimationState.Punching))
+                    changeAnimation(CharacterAnimationState.Punching);
             }
-            if (!animationState.equals(CharacterAnimationState.Punching))
-                changeAnimation(CharacterAnimationState.Punching);
         });
         moveset.put("Kick", (_) -> {
             if (!animationState.equals(CharacterAnimationState.Kicking))
@@ -117,7 +138,33 @@ public class Character {
                 changeAnimation(CharacterAnimationState.Special1);
         });
         // DEBUG: Add test combo
-        moveset.put("SDCombo", (_) -> velX = 8000);
+        moveset.put("SDCombo", (_) -> {
+            if (!isInAction){
+                isInAction = true;
+                // TODO: move in variables parameters that change between left player and right player
+                if (leftPlayer){
+                    runningAttacks.addLast(new Attack(
+                            this,
+                            hitbox.w/2,
+                            (hitbox.h/2) - 20,
+                            new Rect(80, 10),
+                            10,
+                            20));
+                    velx = 8000;
+                }else {
+                    runningAttacks.addLast(new Attack(
+                            this,
+                            -hitbox.w/2,
+                            (hitbox.h/2) - 20,
+                            new Rect(80, 10),
+                            10,
+                            20));
+                    velx = -8000;
+                }
+                if (!animationState.equals(CharacterAnimationState.Running) && !isInAir)
+                    changeAnimation(CharacterAnimationState.Running);
+            }
+        });
     }
 
     public String getName(){ return name; }
