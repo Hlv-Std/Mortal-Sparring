@@ -32,11 +32,11 @@ public class CharacterSelectPanel extends JPanel {
                         "Fazz",
                         true));
 
-        gameState.getPlayer1().getCharacter().x = (double) getWidth()  / 2;
-        gameState.getPlayer1().getCharacter().y = (double) getHeight() / 2;
+        gameState.getPlayer1().getCharacter().x = (double) gameState.getWindowWidth() / 3;
+        gameState.getPlayer1().getCharacter().y = (double) gameState.getWindowHeight() / 1.5;
 
-        gameState.getPlayer2().getCharacter().x = (double) getWidth()  / 1.5;
-        gameState.getPlayer2().getCharacter().y = (double) getHeight() / 1.5;
+        gameState.getPlayer2().getCharacter().x = (double) gameState.getWindowWidth()  / 1.5;
+        gameState.getPlayer2().getCharacter().y = (double) gameState.getWindowHeight() / 1.5;
 
     }
 }
