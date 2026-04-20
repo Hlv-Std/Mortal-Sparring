@@ -38,7 +38,7 @@ public class GameWindow extends JFrame implements KeyListener {
 
         addKeyListener(this);
         setVisible(true);
-        requestFocus();
+        requestFocusInWindow();
     }
 
     private void loadMainMenuPanel(){
@@ -68,21 +68,23 @@ public class GameWindow extends JFrame implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         Container currentPane = getContentPane();
-        if (currentPane.equals(mainMenuPanel)){
+        boolean f2 = e.getKeyCode() == KeyEvent.VK_F2;
+        if (currentPane.equals(mainMenuPanel) && !f2){
             System.out.println("Passing to character select");
             loadCharacterSelectPanel();
-        }else if (currentPane.equals(characterSelectPanel)){
+        }else if (currentPane.equals(characterSelectPanel) && !f2){
             System.out.println("Passing to game");
             loadGamePanel();
         }
 
-        if (e.getKeyCode() == KeyEvent.VK_F2){
+        if (f2){
             gameState.setWindowFullscreen(this, !gameState.isFullscreen());
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {}
+
     static void main() throws InterruptedException {
         SwingUtilities.invokeLater(GameWindow::new);
         GameState.getInstance().waitForQuit();
