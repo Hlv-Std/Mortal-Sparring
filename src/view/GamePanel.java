@@ -1,5 +1,6 @@
 package view;
 
+import controller.BackgroundLoader;
 import controller.InputHandler;
 import model.*;
 import model.Character;
@@ -15,12 +16,12 @@ import java.util.Deque;
  * TODO: Pause Screen (Independent from who): Freeze dt
  */
 public class GamePanel extends JPanel {
-    private final int WIDTH;
-    private final int HEIGHT;
-    private final double GROUND;
+    private int WIDTH;
+    private int HEIGHT;
+    private double GROUND;
 
     private Graphics2D g2;
-    private final Background bg;
+    private Background bg;
     private final Player player1;
     private final Player player2;
     private final Character character1;
@@ -29,21 +30,22 @@ public class GamePanel extends JPanel {
     private double lastPosY = 0;
 
     private final InputHandler input;
+    GameState gameState;
 
     public GamePanel(){
-        GameState gameState = GameState.getInstance();
-        this.player1 = gameState.getPlayer1();
-        this.player2 = gameState.getPlayer2();
+        gameState = GameState.getInstance();
+        this.player1    = gameState.getPlayer1();
+        this.player2    = gameState.getPlayer2();
         this.character1 = player1.getCharacter();
         this.character2 = player2.getCharacter();
-        this.WIDTH   = gameState.getWindowWidth();
-        this.HEIGHT  = gameState.getWindowHeight();
-        this.bg      = gameState.getBg();
-        GROUND       = (double) HEIGHT - 81;
-        input        = new InputHandler(this, player1, player2);
+        this.WIDTH      = gameState.getWindowWidth();
+        this.HEIGHT     = gameState.getWindowHeight();
+        this.bg         = gameState.getBg();
+        GROUND          = (double) HEIGHT - 81;
+        input           = new InputHandler(this, player1, player2);
 
         setFocusable(true);
-        requestFocusInWindow();
+        requestFocus();
 
         Timer t = getTimer();
         t.start();
@@ -124,6 +126,14 @@ public class GamePanel extends JPanel {
     }
 
     private void update(){
+        if (gameState.checkForChanges()){
+            bg = BackgroundLoader.loadAnimations(bg.getName());
+            this.WIDTH      = gameState.getWindowWidth();
+            this.HEIGHT     = gameState.getWindowHeight();
+            GROUND          = (double) HEIGHT - 81;
+            gameState.ok();
+        }
+
         // Position
         if (character1.y + character1.hitbox.h < GROUND) {
             character1.setFalling(character1.velY > 0);
