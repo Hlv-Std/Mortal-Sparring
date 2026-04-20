@@ -1,5 +1,8 @@
 package model;
 
+import javax.swing.*;
+import java.awt.*;
+
 public class GameState {
     private static GameState instance;
 
@@ -9,13 +12,26 @@ public class GameState {
 
     private int windowWidth;
     private int windowHeight;
+    private boolean isFullscreen;
+    private boolean contextHasChanged;
 
     private GameState(){}
 
-    public static GameState getInstance(){
+    public static synchronized GameState getInstance(){
         if (instance == null)
-            return new GameState();
+            instance = new GameState();
         return instance;
+    }
+
+    public synchronized void setWindowFullscreen(JFrame window, boolean flag){
+        window.dispose();
+        window.setUndecorated(flag);
+        window.setVisible(true);
+        GraphicsEnvironment.getLocalGraphicsEnvironment()
+                .getDefaultScreenDevice()
+                .setFullScreenWindow(flag ? window : null);
+        contextHasChanged = true;
+        isFullscreen = flag;
     }
 
     public Player getPlayer1() { return player1; }
@@ -23,6 +39,8 @@ public class GameState {
     public Background getBg() { return bg; }
     public int getWindowWidth(){ return windowWidth; }
     public int getWindowHeight(){ return windowHeight; }
+    public boolean checkForChanges(){ return contextHasChanged; }
+    public boolean isFullscreen(){ return isFullscreen; }
 
     public synchronized void setPlayer1(Player player1) { this.player1 = player1; }
     public synchronized void setPlayer2(Player player2) { this.player2 = player2; }
