@@ -21,7 +21,9 @@ public class InputHandler {
 
     private final int[] p1Keys;
     private final int[] p2Keys;
-    private final int[] commonKeys;
+    private final int pauseKey;
+    private final int restartKey;
+    private final int quitKey;
 
     public InputHandler(JComponent component, Player player1, Player player2){
         this.player1 = player1;
@@ -48,9 +50,9 @@ public class InputHandler {
                 KeyEvent.VK_COMMA,
                 KeyEvent.VK_PERIOD
         };
-        commonKeys = new int[]{
-                KeyEvent.VK_ESCAPE,
-        };
+        pauseKey = KeyEvent.VK_ESCAPE;
+        restartKey = KeyEvent.VK_R;
+        quitKey = KeyEvent.VK_Q;
     }
 
     public void start(){
@@ -95,18 +97,34 @@ public class InputHandler {
             });
         }
 
-        for (int keyCode : commonKeys){
-            String pressed = "pressed_ " + keyCode;
+        String pressed = "pressed_ " + pauseKey;
+        inputMap.put(KeyStroke.getKeyStroke(pauseKey, 0, false), pressed);
+        actionMap.put(pressed, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GameState.getInstance().pauseGame(!GameState.getInstance().isPaused());
+            }
+        });
 
-            inputMap.put(KeyStroke.getKeyStroke(keyCode, 0, false), pressed);
+        pressed = "pressed_ " + restartKey;
+        inputMap.put(KeyStroke.getKeyStroke(restartKey, 0, false), pressed);
+        actionMap.put(pressed, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GameState.getInstance().restartGame();
+            }
+        });
 
-            actionMap.put(pressed, new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    GameState.getInstance().pauseGame(!GameState.getInstance().isPaused());
+        pressed = "pressed_ " + quitKey;
+        inputMap.put(KeyStroke.getKeyStroke(quitKey, 0, false), pressed);
+        actionMap.put(pressed, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (GameState.getInstance().isPaused()){
+                    GameState.getInstance().quit();
                 }
-            });
-        }
+            }
+        });
     }
 
     public boolean isHeld(int keyCode){
