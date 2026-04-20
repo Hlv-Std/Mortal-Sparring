@@ -14,9 +14,6 @@ public class MainMenuPanel extends JPanel {
     public MainMenuPanel(){
         super(new GridBagLayout());
 
-        setFocusable(true);
-        requestFocusInWindow();
-
         gameName = new JLabel("Mortal-Sparring");
         gameName.setSize(400, 400);
         var cGameName = new GridBagConstraints();
