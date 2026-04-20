@@ -15,8 +15,6 @@ import java.nio.file.Path;
 public class CharacterSelectPanel extends JPanel {
     public CharacterSelectPanel(){
         super();
-        setFocusable(true);
-        requestFocusInWindow();
 
         GameState gameState = GameState.getInstance();
         gameState.setBg(BackgroundLoader.loadAnimations("CortileAI"));
