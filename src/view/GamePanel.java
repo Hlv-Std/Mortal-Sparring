@@ -189,26 +189,60 @@ public class GamePanel extends JPanel {
         // DEBUG: Remove this later
         if (player2.getInputProcesser().combo(KeyEvent.VK_J, KeyEvent.VK_K)) character2.executeAction("SDCombo");
 
-        // Attack TTL
+        // Attacks
         Deque<Attack> runningAttacks = character1.getRunningAttacks();
         if (!runningAttacks.isEmpty()){
             Attack hb = runningAttacks.getFirst();
             if (hb.isAlive()){
-                hb.decrease();
+                hb.advance();
+
+                Rectangle attackHB = new Rectangle(
+                        (int) hb.x,
+                        (int) hb.y,
+                        (int) hb.hitbox.w,
+                        (int) hb.hitbox.h);
+
+                Rectangle playerHB = new Rectangle(
+                        (int) character2.x,
+                        (int) character2.y,
+                        (int) character2.hitbox.w,
+                        (int) character2.hitbox.h);
+
+                // NOTE: For some strange reason, if we swap these two parameters, we get a wrong detection
+                if (intersects(playerHB, attackHB)){
+                    character2.damage(hb.damage);
+                }
             }else {
                 character1.setInAction(false);
                 runningAttacks.removeFirst();
             }
+
         }
 
         runningAttacks = character2.getRunningAttacks();
         if (!runningAttacks.isEmpty()){
             Attack hb = runningAttacks.getFirst();
             if (hb.isAlive()){
-                hb.decrease();
+                hb.advance();
             }else {
                 character2.setInAction(false);
                 runningAttacks.removeFirst();
+            }
+
+            Rectangle attackHB = new Rectangle(
+                    (int) hb.x,
+                    (int) hb.y,
+                    (int) hb.hitbox.w,
+                    (int) hb.hitbox.h);
+
+            Rectangle playerHB = new Rectangle(
+                    (int) character1.x,
+                    (int) character1.y,
+                    (int) character1.hitbox.w,
+                    (int) character1.hitbox.h);
+
+            if (intersects(playerHB, attackHB)){
+                character1.damage(hb.damage);
             }
         }
 
@@ -228,6 +262,16 @@ public class GamePanel extends JPanel {
                 character2.vely == 0     &&
                 !character2.getAnimationState().equals(CharacterAnimationState.Idle))
             character2.changeAnimation(CharacterAnimationState.Idle);
+    }
+
+    private boolean intersects(Rectangle a, Rectangle b){
+        // (rectOneRight > rectTwoLeft && rectOneLeft < rectTwoRight && rectOneBottom > rectTwoTop && rectOneTop < rectTwoBottom)
+        int pointA = a.x + a.y;
+        int pointB = b.x + b.y;
+        return (pointA + a.width + a.height / 2) > (pointB + b.height / 2)           &&
+               (pointA + a.height / 2)           < (pointB + b.width + b.height / 2) &&
+               (pointA + a.height + a.width / 2) > (pointB + b.width / 2)            &&
+               (pointA + a.width / 2)            < (pointB + b.height + b.width / 2);
     }
 
     @Override

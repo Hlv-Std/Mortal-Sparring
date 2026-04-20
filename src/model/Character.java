@@ -20,6 +20,7 @@ public class Character {
     public Rect hitbox;
     private boolean isInAir, isFalling, isDucking, isInAction;
     private int jumps;
+    private int health;
     // Animations
     private final HashMap<CharacterAnimationState, HashMap<Integer, BufferedImage>> animations;
     private CharacterAnimationState animationState;
@@ -42,7 +43,11 @@ public class Character {
         isFalling            = false;
         isDucking            = false;
         isInAction           = false;
+        isInvincible         = false;
+        isAlive              = true;
+        iframesCounter       = 0;
         jumps                = 1;
+        health               = 100;
         animations           = new HashMap<>();
         animationState       = CharacterAnimationState.Idle;
         animationFrameNumber = 0;
@@ -120,6 +125,7 @@ public class Character {
     public boolean isInAir(){ return isInAir; }
     public boolean isDucking(){ return isDucking; }
     public boolean isInAction(){ return isInAction; }
+    public boolean isAlive(){ return isAlive; }
     public void setInAir(boolean isInAir) { this.isInAir = isInAir; }
     public void setFalling(boolean isFalling) { this.isFalling = isFalling; }
     public void setDucking(boolean isDucking) { this.isDucking = isDucking; }
@@ -143,6 +149,10 @@ public class Character {
             }
             animationThreshold = RESET_ANIMATION_THRESHOLD;
         }
+        if (iframesCounter > 0)
+            iframesCounter--;
+        else
+            isInvincible = false;
     }
     public void changeAnimation(CharacterAnimationState animationState){
         this.animationState = animationState;
@@ -159,5 +169,19 @@ public class Character {
     public void executeAction(String action){
         moveset.get(action).actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, action));
     }
+    public void damage(int damage){
+        if (!isInvincible){
+            health = Math.max(health - damage, 0);
+            if (leftPlayer)
+                velx = -400;
+            else
+                velx = 400;
+            isInvincible = true;
+            iframesCounter = 5;
+        }
+        if (health == 0)
+            isAlive = false;
+    }
+
 }
 
