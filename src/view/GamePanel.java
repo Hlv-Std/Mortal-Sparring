@@ -72,53 +72,55 @@ public class GamePanel extends JPanel {
             }
             if (Math.abs(character1.velX) < 10) character1.velX = 0;
 
-            if (character2.isInAir()){
-                character2.velX *= (1 - FRICTION/2.3 * dt);
-            } else {
-                character2.velX *= (1 - FRICTION * dt);
-            }
-            if (Math.abs(character2.velX) < 10) character2.velX = 0;
+                if (character2.isInAir()){
+                    character2.velx *= (1 - FRICTION/2.3 * dt);
+                } else {
+                    character2.velx *= (1 - FRICTION * dt);
+                }
+                if (Math.abs(character2.velx) < 10) character2.velx = 0;
 
-            if (character1.x > character2.x){
-                character1.velX = 0;
-                character1.x--;
-            }
+                if (character1.x > character2.x - 30){
+                    character1.velx = 0;
+                    character2.x++;
+                    character1.x--;
+                }
 
-            if (character2.x < character1.x){
-                character2.velX = 0;
-                character2.x++;
-            }
+                if (character2.x < character1.x + 30){
+                    character2.velx = 0;
+                    character1.x--;
+                    character2.x++;
+                }
 
-            // Integrating
-            character1.x += character1.velX * dt;
-            character1.y += character1.velY * dt;
-            character2.x += character2.velX * dt;
-            character2.y += character2.velY * dt;
+                // Integrating
+                character1.x += character1.velx * dt;
+                character1.y += character1.vely * dt;
+                character2.x += character2.velx * dt;
+                character2.y += character2.vely * dt;
 
-            // Collisions
-            if (character1.x < 0){
-                character1.x = 0;
-                character1.velX = 0;
-            } else if (character1.x + character1.hitbox.w >= WIDTH){
-                character1.x = WIDTH - character1.hitbox.w;
-                character1.velX = 0;
-            }
-            if (character1.y + character1.hitbox.h > GROUND){
-                character1.velY = 0;
-                character1.y = GROUND - character1.hitbox.h;
-            }
+                // Collisions
+                if (character1.x < 0){
+                    character1.x = 0;
+                    character1.velx = 0;
+                } else if (character1.x + character1.hitbox.w >= WIDTH){
+                    character1.x = WIDTH - character1.hitbox.w;
+                    character1.velx = 0;
+                }
+                if (character1.y + character1.hitbox.h > GROUND){
+                    character1.vely = 0;
+                    character1.y = GROUND - character1.hitbox.h;
+                }
 
-            if (character2.x < 0){
-                character2.x = 0;
-                character2.velX = 0;
-            } else if (character2.x + character2.hitbox.w >= WIDTH){
-                character2.x = WIDTH - character2.hitbox.w;
-                character2.velX = 0;
-            }
-            if (character2.y + character2.hitbox.h > GROUND){
-                character2.velY = 0;
-                character2.y = GROUND - character2.hitbox.h;
-            }
+                if (character2.x < 0){
+                    character2.x = 0;
+                    character2.velx = 0;
+                } else if (character2.x + character2.hitbox.w >= WIDTH){
+                    character2.x = WIDTH - character2.hitbox.w;
+                    character2.velx = 0;
+                }
+                if (character2.y + character2.hitbox.h > GROUND){
+                    character2.vely = 0;
+                    character2.y = GROUND - character2.hitbox.h;
+                }
 
             update();
             repaint();
@@ -136,7 +138,7 @@ public class GamePanel extends JPanel {
 
         // Position
         if (character1.y + character1.hitbox.h < GROUND) {
-            character1.setFalling(character1.velY > 0);
+            character1.setFalling(character1.vely > 0);
             character1.setInAir(true);
         } else {
             character1.setInAir(false);
@@ -146,7 +148,7 @@ public class GamePanel extends JPanel {
         }
 
         if (character2.y + character2.hitbox.h < GROUND) {
-            character2.setFalling(character2.velY > 0);
+            character2.setFalling(character2.vely > 0);
             character2.setInAir(true);
         } else {
             character2.setInAir(false);
@@ -203,16 +205,16 @@ public class GamePanel extends JPanel {
         if (!character1.isInAir()    &&
                 !character1.isDucking()  &&
                 !character1.isInAction() &&
-                character1.velX == 0     &&
-                character1.velY == 0     &&
+                character1.velx == 0     &&
+                character1.vely == 0     &&
                 !character1.getAnimationState().equals(CharacterAnimationState.Idle))
             character1.changeAnimation(CharacterAnimationState.Idle);
 
         if (!character2.isInAir()    &&
                 !character2.isDucking()  &&
                 !character2.isInAction() &&
-                character2.velX == 0     &&
-                character2.velY == 0     &&
+                character2.velx == 0     &&
+                character2.vely == 0     &&
                 !character2.getAnimationState().equals(CharacterAnimationState.Idle))
             character2.changeAnimation(CharacterAnimationState.Idle);
     }

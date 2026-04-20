@@ -16,8 +16,7 @@ public class Character {
     private final String name;
     // Position
     public double x,y;
-    public double velX, velY;
-    // Info
+    public double velx, vely;
     public Rect hitbox;
     private boolean isInAir, isFalling, isDucking, isInAction;
     private int jumps;
@@ -36,8 +35,8 @@ public class Character {
         this.name            = name;
         x                    = 0;
         y                    = 0;
-        velX                 = 0;
-        velY                 = 0;
+        velx                 = 0;
+        vely                 = 0;
         hitbox               = new Rect(100, 100);
         isInAir              = false;
         isFalling            = false;
@@ -61,23 +60,23 @@ public class Character {
 
         moveset.put("Jump", (_) -> {
             if (!isInAir){
-                velY = -600;
+                vely = -600;
                 isInAir = true;
                 jumps -= 1;
                 if (!animationState.equals(CharacterAnimationState.Jumping))
                     changeAnimation(CharacterAnimationState.Jumping);
             } else if (jumps > 0){
                 if (isFalling) {
-                    velY = -500;
+                    vely = -500;
                 } else {
-                    velY -= 400;
+                    vely -= 400;
                 }
                 jumps -= 1;
             }
         });
         moveset.put("Duck", (_) -> {
             if (isInAir){
-                velY = 800;
+                vely = 800;
                 if (!animationState.equals(CharacterAnimationState.Falling))
                     changeAnimation(CharacterAnimationState.Falling);
             }else {
@@ -87,12 +86,12 @@ public class Character {
             }
         });
         moveset.put("Left", (_) -> {
-            velX = -300;
+            velx = -300;
             if (!animationState.equals(CharacterAnimationState.Running) && !isInAir)
                 changeAnimation(CharacterAnimationState.Running);
         });
         moveset.put("Right", (_) -> {
-            velX = 300;
+            velx = 300;
             if (!animationState.equals(CharacterAnimationState.Running) && !isInAir)
                 changeAnimation(CharacterAnimationState.Running);
         });
