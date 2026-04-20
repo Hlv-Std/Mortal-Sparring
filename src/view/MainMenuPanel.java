@@ -8,13 +8,10 @@ import java.awt.*;
  * TODO: Change panel upon pressing a button
  */
 public class MainMenuPanel extends JPanel {
-    private JLabel gameName;
-    private JLabel inputText;
-
     public MainMenuPanel(){
         super(new GridBagLayout());
 
-        gameName = new JLabel("Mortal-Sparring");
+        JLabel gameName = new JLabel("Mortal-Sparring");
         gameName.setSize(400, 400);
         var cGameName = new GridBagConstraints();
         {
@@ -22,7 +19,7 @@ public class MainMenuPanel extends JPanel {
             cGameName.gridy = 0;
         }
 
-        inputText = new JLabel("Premi un tasto per iniziare");
+        JLabel inputText = new JLabel("Premi un tasto per iniziare");
         var cInputText = new GridBagConstraints();
         {
             cInputText.gridx = 1;
