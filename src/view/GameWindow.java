@@ -3,6 +3,7 @@ package view;
 import controller.BackgroundLoader;
 import controller.PlayerLoader;
 import model.Background;
+import model.GameState;
 import model.Player;
 
 import javax.swing.*;
@@ -22,10 +23,7 @@ public class GameWindow extends JFrame implements KeyListener {
     private MainMenuPanel mainMenuPanel;
     private CharacterSelectPanel characterSelectPanel;
     private GamePanel gamePanel;
-    private Background bg;
-    private BackgroundLoader bgLoader;
-    private Player player1;
-    private Player player2;
+    private GameState gameState;
 
     public GameWindow(){
         super("Mortal Sparring");

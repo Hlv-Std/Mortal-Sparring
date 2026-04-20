@@ -30,14 +30,15 @@ public class GamePanel extends JPanel {
 
     private final InputHandler input;
 
-    public GamePanel(Player player1, Player player2, int width, int height, Background bg){
-        this.player1 = player1;
-        this.player2 = player2;
+    public GamePanel(){
+        GameState gameState = GameState.getInstance();
+        this.player1 = gameState.getPlayer1();
+        this.player2 = gameState.getPlayer2();
         this.character1 = player1.getCharacter();
         this.character2 = player2.getCharacter();
-        this.WIDTH   = width;
-        this.HEIGHT  = height;
-        this.bg      = bg;
+        this.WIDTH   = gameState.getWindowWidth();
+        this.HEIGHT  = gameState.getWindowHeight();
+        this.bg      = gameState.getBg();
         GROUND       = (double) HEIGHT - 81;
         input        = new InputHandler(this, player1, player2);
 
