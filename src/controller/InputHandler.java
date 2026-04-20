@@ -1,5 +1,6 @@
 package controller;
 
+import model.GameState;
 import model.Player;
 
 import javax.swing.*;
@@ -18,16 +19,42 @@ public class InputHandler {
     private final InputMap inputMap;
     private final ActionMap actionMap;
 
+    private final int[] p1Keys;
+    private final int[] p2Keys;
+    private final int[] commonKeys;
+
     public InputHandler(JComponent component, Player player1, Player player2){
         this.player1 = player1;
         this.player2 = player2;
         keysHeld       = new HashSet<>();
         inputMap       = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         actionMap      = component.getActionMap();
+
+        p1Keys = new int[]{
+                KeyEvent.VK_W,
+                KeyEvent.VK_A,
+                KeyEvent.VK_S,
+                KeyEvent.VK_D,
+                KeyEvent.VK_X,
+                KeyEvent.VK_C,
+                KeyEvent.VK_V
+        };
+        p2Keys = new int[]{
+                KeyEvent.VK_U,
+                KeyEvent.VK_H,
+                KeyEvent.VK_J,
+                KeyEvent.VK_K,
+                KeyEvent.VK_M,
+                KeyEvent.VK_COMMA,
+                KeyEvent.VK_PERIOD
+        };
+        commonKeys = new int[]{
+                KeyEvent.VK_ESCAPE,
+        };
     }
 
     public void start(){
-        for(int keyCode : getP1Keys()){
+        for(int keyCode : p1Keys){
             String pressed = "pressed_" + keyCode;
             String released = "released_" + keyCode;
 
@@ -48,13 +75,12 @@ public class InputHandler {
             });
         }
 
-        for(int keyCode : getP2Keys()){
+        for(int keyCode : p2Keys){
             String pressed = "pressed_" + keyCode;
             String released = "released_" + keyCode;
 
             inputMap.put(KeyStroke.getKeyStroke(keyCode, 0, false), pressed);
             inputMap.put(KeyStroke.getKeyStroke(keyCode, 0, true), released);
-
 
             actionMap.put(pressed, new AbstractAction() {
                 @Override
@@ -69,34 +95,22 @@ public class InputHandler {
             });
         }
 
+        for (int keyCode : commonKeys){
+            String pressed = "pressed_ " + keyCode;
+
+            inputMap.put(KeyStroke.getKeyStroke(keyCode, 0, false), pressed);
+
+            actionMap.put(pressed, new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    GameState.getInstance().pauseGame(!GameState.getInstance().isPaused());
+                }
+            });
+        }
     }
 
     public boolean isHeld(int keyCode){
         return keysHeld.contains(keyCode);
-    }
-
-    private int[] getP1Keys(){
-        return new int[]{
-                KeyEvent.VK_W,
-                KeyEvent.VK_A,
-                KeyEvent.VK_S,
-                KeyEvent.VK_D,
-                KeyEvent.VK_X,
-                KeyEvent.VK_C,
-                KeyEvent.VK_V
-        };
-    }
-
-    private int[] getP2Keys(){
-       return new int[] {
-               KeyEvent.VK_U,
-               KeyEvent.VK_H,
-               KeyEvent.VK_J,
-               KeyEvent.VK_K,
-               KeyEvent.VK_M,
-               KeyEvent.VK_COMMA,
-               KeyEvent.VK_PERIOD
-       };
     }
 }
 
