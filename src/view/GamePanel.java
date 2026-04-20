@@ -44,6 +44,15 @@ public class GamePanel extends JPanel {
         GROUND          = (double) HEIGHT - 81;
         input           = new InputHandler(this, player1, player2);
 
+        pauseScreen = new BufferedImage(
+                gameState.getWindowWidth(),
+                gameState.getWindowHeight(),
+                BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics = pauseScreen.createGraphics();
+        graphics.setColor(new Color(20, 20, 20, 170));
+        graphics.fillRect(0, 0, gameState.getWindowWidth(), gameState.getWindowHeight());
+        graphics.dispose();
+
         setFocusable(true);
         requestFocus();
 
@@ -59,18 +68,19 @@ public class GamePanel extends JPanel {
         final double FRICTION = 10;
         final double MAX_VELOCITY = 900;
         return new Timer(1000 / FPS, (_) -> {
-            // NOTE: Input -> Forces -> Friction -> Integrate -> Collide
-            // Forces
-            character1.velY += GRAVITY * dt;
-            character2.velY += GRAVITY * dt;
+            if (!gameState.isPaused()) {
+                // NOTE: Input -> Forces -> Friction -> Integrate -> Collide
+                // Forces
+                character1.vely += GRAVITY * dt;
+                character2.vely += GRAVITY * dt;
 
-            // Friction
-            if (character1.isInAir()){
-                character1.velX *= (1 - FRICTION/2.3 * dt);
-            } else {
-                character1.velX *= (1 - FRICTION * dt);
-            }
-            if (Math.abs(character1.velX) < 10) character1.velX = 0;
+                // Friction
+                if (character1.isInAir()){
+                    character1.velx *= (1 - FRICTION/2.3 * dt);
+                } else {
+                    character1.velx *= (1 - FRICTION * dt);
+                }
+                if (Math.abs(character1.velx) < 10) character1.velx = 0;
 
                 if (character2.isInAir()){
                     character2.velx *= (1 - FRICTION/2.3 * dt);
@@ -122,7 +132,8 @@ public class GamePanel extends JPanel {
                     character2.y = GROUND - character2.hitbox.h;
                 }
 
-            update();
+                update();
+            }
             repaint();
         });
     }
@@ -222,8 +233,10 @@ public class GamePanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g2 = (Graphics2D) g;
+        Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
         // Background
         {
@@ -239,78 +252,94 @@ public class GamePanel extends JPanel {
             }
         }
 
-        // Player 1
-        {
-            character1.advanceFrame();
-            // Sprite
-            BufferedImage sprite = character1.getCurrentFrame();
-            if (sprite != null){
-                g2.drawImage(
-                        sprite,
+        if (!gameState.isPaused()){
+            // Player 1
+            {
+                character1.advanceFrame();
+                // Sprite
+                BufferedImage sprite = character1.getCurrentFrame();
+                if (sprite != null){
+                    g2.drawImage(
+                            sprite,
+                            (int) character1.x,
+                            (int) character1.y,
+                            null);
+                }
+                g2.setColor(Color.BLUE);
+                // Position
+                g2.drawRect((int) character1.x, (int) character1.y, 1, 1);
+                // Hitbox
+                if (!character1.isAlive())
+                    g2.setColor(Color.RED);
+                g2.drawRect(
                         (int) character1.x,
                         (int) character1.y,
-                        null);
-            }
-            g2.setColor(Color.BLUE);
-            // Position
-            g2.drawRect((int) character1.x, (int) character1.y, 1, 1);
-            // Hitbox
-            g2.drawRect(
-                    (int) character1.x,
-                    (int) character1.y,
-                    (int) character1.hitbox.w,
-                    (int) character1.hitbox.h
-            );
+                        (int) character1.hitbox.w,
+                        (int) character1.hitbox.h
+                );
 
-            g2.setColor(Color.ORANGE);
-            if (character1.isInAction()){
-                Attack hb = character1.getCurrentAttackHitbox();
-                if (hb != null){
-                    g2.drawRect(
-                            (int) hb.x,
-                            (int) hb.y,
-                            (int) hb.hitbox.w,
-                            (int) hb.hitbox.h
-                    );
+                g2.setColor(Color.ORANGE);
+                if (character1.isInAction()){
+                    Attack hb = character1.getCurrentAttackHitbox();
+                    if (hb != null){
+                        g2.drawRect(
+                                (int) hb.x,
+                                (int) hb.y,
+                                (int) hb.hitbox.w,
+                                (int) hb.hitbox.h
+                        );
+                    }
                 }
             }
-        }
 
-        // Player 2
-        {
-            character2.advanceFrame();
-            // Sprite
-            BufferedImage sprite = character2.getCurrentFrame();
-            if (sprite != null){
-                g2.drawImage(
-                        sprite,
+            // Player 2
+            {
+                character2.advanceFrame();
+                // Sprite
+                BufferedImage sprite = character2.getCurrentFrame();
+                if (sprite != null){
+                    g2.drawImage(
+                            sprite,
+                            (int) character2.x,
+                            (int) character2.y,
+                            null);
+                }
+                g2.setColor(Color.BLUE);
+                // Position
+                g2.drawRect((int) character2.x, (int) character2.y, 1, 1);
+                // Hitbox
+                if (!character2.isAlive())
+                    g2.setColor(Color.RED);
+                g2.drawRect(
                         (int) character2.x,
                         (int) character2.y,
-                        null);
-            }
-            g2.setColor(Color.BLUE);
-            // Position
-            g2.drawRect((int) character2.x, (int) character2.y, 1, 1);
-            // Hitbox
-            g2.drawRect(
-                    (int) character2.x,
-                    (int) character2.y,
-                    (int) character2.hitbox.w,
-                    (int) character2.hitbox.h
-            );
+                        (int) character2.hitbox.w,
+                        (int) character2.hitbox.h
+                );
 
-            g2.setColor(Color.ORANGE);
-            if (character2.isInAction()){
-                Attack hb = character2.getCurrentAttackHitbox();
-                if (hb != null){
-                    g2.drawRect(
-                            (int) hb.x,
-                            (int) hb.y,
-                            (int) hb.hitbox.w,
-                            (int) hb.hitbox.h
-                    );
+                g2.setColor(Color.ORANGE);
+                if (character2.isInAction()){
+                    Attack hb = character2.getCurrentAttackHitbox();
+                    if (hb != null){
+                        g2.drawRect(
+                                (int) hb.x,
+                                (int) hb.y,
+                                (int) hb.hitbox.w,
+                                (int) hb.hitbox.h
+                        );
+                    }
                 }
             }
+        } else {
+            g2.drawImage(pauseScreen, null, 0, 0);
+            Font font = g2.getFont();
+            font = font.deriveFont(AffineTransform.getScaleInstance(6,6));
+            g2.setFont(font);
+            g2.setColor(Color.WHITE);
+            g2.drawString(
+                    "Pause",
+                    (int) (gameState.getWindowWidth() / 1.3),
+                    gameState.getWindowHeight() / 10);
         }
 
         // Ground
