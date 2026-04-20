@@ -20,6 +20,7 @@ public class GameState {
     private boolean windowHasChanged;
 
     private boolean isPaused = false;
+    private boolean restart = false;
     private boolean quit = false;
 
     private GameState(){
@@ -63,6 +64,7 @@ public class GameState {
     public boolean windowHasChanged(){ return windowHasChanged; }
     public boolean isFullscreen(){ return isFullscreen; }
     public boolean isPaused(){ return isPaused; }
+    public boolean needsRestart(){ return restart; }
     public synchronized void waitForQuit() throws InterruptedException {
         while(!quit)
             wait();
@@ -73,8 +75,12 @@ public class GameState {
     public synchronized void setBg(Background bg) { this.bg = bg; }
     public synchronized void setWindowWidth(int windowWidth){ this.windowWidth = windowWidth; }
     public synchronized void setWindowHeight(int windowHeight){ this.windowHeight = windowHeight; }
-    public synchronized void ok(){ contextHasChanged = false; }
+    public synchronized void ok(){
+        windowHasChanged = false;
+        restart = false;
+    }
     public synchronized void pauseGame(boolean pause){ this.isPaused = pause; }
+    public synchronized void restartGame(){ restart = true; }
     public synchronized void quit(){
         quit = true;
         notifyAll();

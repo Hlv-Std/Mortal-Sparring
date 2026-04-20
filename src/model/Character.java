@@ -183,5 +183,27 @@ public class Character {
             isAlive = false;
     }
 
+    public void reset(){
+        if (leftPlayer){
+            x = (double) GameState.getInstance().getWindowWidth() / 3;
+            y = (double) GameState.getInstance().getWindowHeight() / 1.5;
+        }else {
+            x = (double) GameState.getInstance().getWindowWidth()  / 1.5;
+            y = (double) GameState.getInstance().getWindowHeight() / 1.5;
+        }
+        velx                 = 0;
+        vely                 = 0;
+        isInAir              = false;
+        isFalling            = false;
+        isDucking            = false;
+        isInAction           = false;
+        isInvincible         = false;
+        isAlive              = true;
+        iframesCounter       = 0;
+        jumps                = 1;
+        health               = 100;
+        animationState       = CharacterAnimationState.Idle;
+        animationFrameNumber = 0;
+    }
 }
 

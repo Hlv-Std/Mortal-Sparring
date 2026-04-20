@@ -147,6 +147,12 @@ public class GamePanel extends JPanel {
             gameState.ok();
         }
 
+        if (gameState.needsRestart()){
+            character1.reset();
+            character2.reset();
+            gameState.ok();
+        }
+
         // Position
         if (character1.y + character1.hitbox.h < GROUND) {
             character1.setFalling(character1.vely > 0);
