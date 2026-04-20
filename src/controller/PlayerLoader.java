@@ -2,6 +2,7 @@ package controller;
 
 import model.Character;
 import model.CharacterAnimationState;
+import model.Player;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -12,17 +13,19 @@ import java.nio.file.Path;
 import java.util.Map;
 
 public class PlayerLoader {
-    public static Character loadAnimations(String name, Path playerDirectory, boolean mirror){
-        Character character = new Character(name);
+    public static Player loadAnimations(String playerName, String characterName, Path playerDirectory, boolean mirror){
+        Player player = new Player(playerName);
+        player.setCharacter(new Character(characterName));
+        Character character = player.getCharacter();
         try {
             Files.walk(playerDirectory).forEach((path -> {
                 if (Files.isRegularFile(path)){
                     String[] fileData = path.getFileName().toString().split("_");
-                    String playerName = fileData[0];
+                    String loaded_characterName = fileData[0];
                     String animationName = fileData[1];
                     String animationNumber = fileData[2].split("\\.")[0];
 
-                    if (!playerName.equalsIgnoreCase(character.getName()))
+                    if (!loaded_characterName.equalsIgnoreCase(characterName))
                         return; // Wrong file
 
                     Map<Integer, BufferedImage> frames = character.getFrames(CharacterAnimationState.valueOf(animationName));
@@ -53,7 +56,7 @@ public class PlayerLoader {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        System.out.printf("Loaded %s: %d frames\n", name, character.getFrames(CharacterAnimationState.Idle).size());
-        return character;
+        System.out.printf("Loaded %s: %d frames\n", characterName, character.getFrames(CharacterAnimationState.Idle).size());
+        return player;
     }
 }
