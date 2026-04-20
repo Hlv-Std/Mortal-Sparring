@@ -8,6 +8,8 @@ import model.Character;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.Deque;
 
@@ -20,17 +22,15 @@ public class GamePanel extends JPanel {
     private int HEIGHT;
     private double GROUND;
 
-    private Graphics2D g2;
     private Background bg;
     private final Player player1;
     private final Player player2;
     private final Character character1;
     private final Character character2;
-    private double lastPosX = 0;
-    private double lastPosY = 0;
 
     private final InputHandler input;
-    GameState gameState;
+    private final GameState gameState;
+    private final BufferedImage pauseScreen;
 
     public GamePanel(){
         gameState = GameState.getInstance();
