@@ -111,7 +111,10 @@ public class InputHandler {
         actionMap.put(pressed, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                GameState.getInstance().restartGame();
+              GameState state = GameState.getInstance();
+              if (state.isPaused()){
+                state.restartGame();
+                state.pauseGame(false);
             }
         });
 
