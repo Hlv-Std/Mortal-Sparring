@@ -207,12 +207,12 @@ public class GamePanel extends JPanel {
         // DEBUG: Remove this later
         if (player1.getInputProcesser().combo(KeyEvent.VK_S, KeyEvent.VK_D)) character1.executeAction("SDCombo");
 
-        if (input.isHeld(KeyEvent.VK_U))      character2.executeAction("Jump");
-        if (input.isHeld(KeyEvent.VK_H))      character2.executeAction("Left");
-        if (input.isHeld(KeyEvent.VK_J))      character2.executeAction("Duck");
-        if (input.isHeld(KeyEvent.VK_K))      character2.executeAction("Right");
-        if (input.isHeld(KeyEvent.VK_M))      character2.executeAction("Punch");
-        if (input.isHeld(KeyEvent.VK_COMMA))  character2.executeAction("Kick");
+        if (input.isHeld(KeyEvent.VK_U)) character2.executeAction("Jump");
+        if (input.isHeld(KeyEvent.VK_H)) character2.executeAction("Left");
+        if (input.isHeld(KeyEvent.VK_J)) character2.executeAction("Duck");
+        if (input.isHeld(KeyEvent.VK_K)) character2.executeAction("Right");
+        if (input.isHeld(KeyEvent.VK_M)) character2.executeAction("Punch");
+        if (input.isHeld(KeyEvent.VK_COMMA)) character2.executeAction("Kick");
         if (input.isHeld(KeyEvent.VK_PERIOD)) character2.executeAction("Special1");
         // DEBUG: Remove this later
         if (player2.getInputProcesser().combo(KeyEvent.VK_J, KeyEvent.VK_H)) character2.executeAction("SDCombo");
@@ -297,9 +297,9 @@ public class GamePanel extends JPanel {
         int pointA = a.x + a.y;
         int pointB = b.x + b.y;
         return (pointA + a.width + a.height / 2) > (pointB + b.height / 2)           &&
-               (pointA + a.height / 2)           < (pointB + b.width + b.height / 2) &&
-               (pointA + a.height + a.width / 2) > (pointB + b.width / 2)            &&
-               (pointA + a.width / 2)            < (pointB + b.height + b.width / 2);
+                (pointA + a.height / 2)           < (pointB + b.width + b.height / 2) &&
+                (pointA + a.height + a.width / 2) > (pointB + b.width / 2)            &&
+                (pointA + a.width / 2)            < (pointB + b.height + b.width / 2);
     }
 
     @Override
@@ -329,78 +329,84 @@ public class GamePanel extends JPanel {
             {
                 character1.advanceFrame();
                 // Sprite
-                BufferedImage sprite = character1.getCurrentFrame();
-                if (sprite != null){
-                    g2.drawImage(
-                            sprite,
-                            (int) character1.x,
-                            (int) character1.y,
-                            null);
-                }
-                g2.setColor(Color.BLUE);
-                // Position
-                g2.drawRect((int) character1.x, (int) character1.y, 1, 1);
-                // Hitbox
-                if (!character1.isAlive())
-                    g2.setColor(Color.RED);
-                g2.drawRect(
-                        (int) character1.x,
-                        (int) character1.y,
-                        (int) character1.hitbox.w,
-                        (int) character1.hitbox.h
-                );
-
-                g2.setColor(Color.ORANGE);
-                if (character1.isInAction()){
-                    Attack hb = character1.getCurrentAttackHitbox();
-                    if (hb != null){
-                        g2.drawRect(
-                                (int) hb.x,
-                                (int) hb.y,
-                                (int) hb.hitbox.w,
-                                (int) hb.hitbox.h
-                        );
+                if (!character1.isBlinking()){
+                    BufferedImage sprite = character1.getCurrentFrame();
+                    if (sprite != null){
+                        g2.drawImage(
+                                sprite,
+                                (int) character1.x,
+                                (int) character1.y,
+                                null);
                     }
                 }
+
+                g2.setColor(Color.BLUE);
+                // Position
+                // g2.drawRect((int) character1.x, (int) character1.y, 1, 1);
+                // Hitbox
+                // if (!character1.isAlive())
+                //     g2.setColor(Color.RED);
+                // g2.drawRect(
+                //         (int) character1.x,
+                //         (int) character1.y,
+                //         (int) character1.hitbox.w,
+                //         (int) character1.hitbox.h
+                // );
+
+                // g2.setColor(Color.ORANGE);
+                // if (character1.isInAction()){
+                //     Attack hb = character1.getCurrentAttackHitbox();
+                //     if (hb != null){
+                //         g2.drawRect(
+                //                 (int) hb.x,
+                //                 (int) hb.y,
+                //                 (int) hb.hitbox.w,
+                //                 (int) hb.hitbox.h
+                //         );
+                //     }
+                // }
             }
 
             // Player 2
             {
                 character2.advanceFrame();
                 // Sprite
-                BufferedImage sprite = character2.getCurrentFrame();
-                if (sprite != null){
-                    g2.drawImage(
-                            sprite,
-                            (int) character2.x,
-                            (int) character2.y,
-                            null);
-                }
-                g2.setColor(Color.BLUE);
-                // Position
-                g2.drawRect((int) character2.x, (int) character2.y, 1, 1);
-                // Hitbox
-                if (!character2.isAlive())
-                    g2.setColor(Color.RED);
-                g2.drawRect(
-                        (int) character2.x,
-                        (int) character2.y,
-                        (int) character2.hitbox.w,
-                        (int) character2.hitbox.h
-                );
-
-                g2.setColor(Color.ORANGE);
-                if (character2.isInAction()){
-                    Attack hb = character2.getCurrentAttackHitbox();
-                    if (hb != null){
-                        g2.drawRect(
-                                (int) hb.x,
-                                (int) hb.y,
-                                (int) hb.hitbox.w,
-                                (int) hb.hitbox.h
-                        );
+                if (!character2.isBlinking()){
+                    BufferedImage sprite = character2.getCurrentFrame();
+                    if (sprite != null){
+                        g2.drawImage(
+                                sprite,
+                                (int) character2.x,
+                                (int) character2.y,
+                                null);
                     }
                 }
+
+                g2.setColor(Color.BLUE);
+                // Position
+                // g2.drawRect((int) character2.x, (int) character2.y, 1, 1);
+                // Hitbox
+                // if (!character2.isAlive())
+                //     g2.setColor(Color.RED);
+                // g2.drawRect(
+                //         (int) character2.x,
+                //         (int) character2.y,
+                //         (int) character2.hitbox.w,
+                //         (int) character2.hitbox.h
+                // );
+
+                // g2.setColor(Color.ORANGE);
+                // if (character2.isInAction()){
+                //     Attack hb = character2.getCurrentAttackHitbox();
+                //     if (hb != null){
+                //         g2.drawRect(
+                //                 (int) hb.x,
+                //                 (int) hb.y,
+                //                 (int) hb.hitbox.w,
+                //                 (int) hb.hitbox.h
+                //         );
+                //     }
+                // }
             }
         } else {
             g2.drawImage(pauseScreen, null, 0, 0);
