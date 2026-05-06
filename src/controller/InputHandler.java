@@ -125,8 +125,9 @@ public class InputHandler {
         actionMap.put(pressed, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (GameState.getInstance().isPaused()){
-                    GameState.getInstance().quit();
+              GameState state = GameState.getInstance();
+                if (state.isPaused()){
+                    state.quit();
                 }
             }
         });
