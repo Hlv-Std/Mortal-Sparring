@@ -20,7 +20,9 @@ public class Character {
     public Rect hitbox;
     // Info
     private boolean isInAir, isFalling, isDucking, isInAction, isInvincible, isAlive;
+    private boolean blinking;
     private int iframesCounter;
+    private static final int RESET_IFRAMES = 10;
     private int jumps;
     private int health;
     private final boolean leftPlayer;
@@ -49,6 +51,7 @@ public class Character {
         isInAction           = false;
         isInvincible         = false;
         isAlive              = true;
+        blinking             = false;
         iframesCounter       = 0;
         jumps                = 1;
         health               = 100;
@@ -66,6 +69,7 @@ public class Character {
         animations.put(CharacterAnimationState.Kicking,  new HashMap<>());
         animations.put(CharacterAnimationState.Special1, new HashMap<>());
         animations.put(CharacterAnimationState.Punching, new HashMap<>());
+        animations.put(CharacterAnimationState.Dead, new HashMap<>());
 
         moveset.put("Jump", (_) -> {
             if (!isInAir){
@@ -170,9 +174,12 @@ public class Character {
     public String getName(){ return name; }
 
     public boolean isInAir(){ return isInAir; }
+    public boolean isFalling(){ return isFalling; }
     public boolean isDucking(){ return isDucking; }
     public boolean isInAction(){ return isInAction; }
     public boolean isAlive(){ return isAlive; }
+    public boolean isInvincible(){ return isInvincible; }
+    public boolean isBlinking(){ return blinking; }
     public void setInAir(boolean isInAir) { this.isInAir = isInAir; }
     public void setFalling(boolean isFalling) { this.isFalling = isFalling; }
     public void setDucking(boolean isDucking) { this.isDucking = isDucking; }
@@ -196,12 +203,17 @@ public class Character {
             }
             animationThreshold = RESET_ANIMATION_THRESHOLD;
         }
-        if (iframesCounter > 0)
+
+        if (iframesCounter > 0){
             iframesCounter--;
-        else
+            blinking = !blinking;
+        }else {
             isInvincible = false;
+            blinking = false;
+        }
     }
     public void changeAnimation(CharacterAnimationState animationState){
+        if (this.animationState.equals(animationState)) return;
         this.animationState = animationState;
         animationFrameNumber = 0;
     }
@@ -224,7 +236,7 @@ public class Character {
             else
                 velx = 400;
             isInvincible = true;
-            iframesCounter = 5;
+            iframesCounter = RESET_IFRAMES;
         }
         if (health == 0)
             isAlive = false;
@@ -233,11 +245,10 @@ public class Character {
     public void reset(){
         if (leftPlayer){
             x = (double) GameState.getInstance().getWindowWidth() / 3;
-            y = (double) GameState.getInstance().getWindowHeight() / 1.5;
         }else {
             x = (double) GameState.getInstance().getWindowWidth()  / 1.5;
-            y = (double) GameState.getInstance().getWindowHeight() / 1.5;
         }
+        y = (double) GameState.getInstance().getWindowHeight() / 1.5;
         velx                 = 0;
         vely                 = 0;
         isInAir              = false;
