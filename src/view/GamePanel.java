@@ -8,7 +8,6 @@ import model.Character;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.Deque;
@@ -167,6 +166,13 @@ public class GamePanel extends JPanel {
             else if (character2.isAlive())
                 character2.changeAnimation(CharacterAnimationState.Idle);
             return;
+        }
+
+        if (character1.isFalling()){
+            character1.changeAnimation(CharacterAnimationState.Falling);
+        }
+        if (character2.isFalling()){
+            character2.changeAnimation(CharacterAnimationState.Falling);
         }
 
         // Position
