@@ -15,7 +15,7 @@ public class GameWindow extends JFrame implements KeyListener {
     private MainMenuPanel mainMenuPanel;
     private CharacterSelectPanel characterSelectPanel;
     private GamePanel gamePanel;
-    private GameState gameState;
+    private final GameState gameState;
 
     public GameWindow(){
         super("Mortal Sparring");
