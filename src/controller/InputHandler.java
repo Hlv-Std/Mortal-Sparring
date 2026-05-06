@@ -114,7 +114,9 @@ public class InputHandler {
               GameState state = GameState.getInstance();
               if (state.isPaused()){
                 state.restartGame();
+                state.setGameover(false);
                 state.pauseGame(false);
+              }
             }
         });
 

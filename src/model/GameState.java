@@ -20,6 +20,7 @@ public class GameState {
     private boolean windowHasChanged;
 
     private boolean isPaused = false;
+    private boolean gameover = false;
     private boolean restart = false;
     private boolean quit = false;
 
@@ -65,6 +66,7 @@ public class GameState {
     public boolean isFullscreen(){ return isFullscreen; }
     public boolean isPaused(){ return isPaused; }
     public boolean needsRestart(){ return restart; }
+    public boolean isGameover(){ return gameover; }
     public synchronized void waitForQuit() throws InterruptedException {
         while(!quit)
             wait();
@@ -81,6 +83,7 @@ public class GameState {
     }
     public synchronized void pauseGame(boolean pause){ this.isPaused = pause; }
     public synchronized void restartGame(){ restart = true; }
+    public synchronized void setGameover(boolean gameover){ this.gameover = gameover; }
     public synchronized void quit(){
         quit = true;
         notifyAll();

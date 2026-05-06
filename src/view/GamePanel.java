@@ -153,6 +153,22 @@ public class GamePanel extends JPanel {
             gameState.ok();
         }
 
+        if (!character1.isAlive()){
+            character1.changeAnimation(CharacterAnimationState.Dead);
+            gameState.setGameover(true);
+        }else if (!character2.isAlive()){
+            character2.changeAnimation(CharacterAnimationState.Dead);
+            gameState.setGameover(true);
+        }
+
+        if (gameState.isGameover()){
+            if(character1.isAlive())
+                character1.changeAnimation(CharacterAnimationState.Idle);
+            else if (character2.isAlive())
+                character2.changeAnimation(CharacterAnimationState.Idle);
+            return;
+        }
+
         // Position
         if (character1.y + character1.hitbox.h < GROUND) {
             character1.setFalling(character1.vely > 0);

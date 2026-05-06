@@ -9,4 +9,5 @@ public enum CharacterAnimationState {
     Kicking,
     Special1,
     Punching,
+    Dead,
 }
