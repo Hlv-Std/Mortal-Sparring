@@ -5,7 +5,6 @@ import controller.PlayerLoader;
 import model.GameState;
 
 import javax.swing.*;
-import java.nio.file.Path;
 
 /*
  * TODO: UI for selecting the characters
@@ -23,13 +22,13 @@ public class CharacterSelectPanel extends JPanel {
         gameState.setPlayer1(
                 PlayerLoader.loadAnimations(
                         "Helvetica",
-                        "Pennacchi",
+                        "Ken",
                         false));
 
         gameState.setPlayer2(
                 PlayerLoader.loadAnimations(
                         "Standard",
-                        "Fazz",
+                        "EvilKen",
                         true));
 
         gameState.getPlayer1().getCharacter().x = (double) gameState.getWindowWidth() / 3;
