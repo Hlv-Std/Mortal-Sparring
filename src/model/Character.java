@@ -69,7 +69,7 @@ public class Character {
         animations.put(CharacterAnimationState.Kicking,  new HashMap<>());
         animations.put(CharacterAnimationState.Special1, new HashMap<>());
         animations.put(CharacterAnimationState.Punching, new HashMap<>());
-        animations.put(CharacterAnimationState.Dead, new HashMap<>());
+        animations.put(CharacterAnimationState.Dead,     new HashMap<>());
 
         moveset.put("Jump", (_) -> {
             if (!isInAir){

@@ -297,9 +297,9 @@ public class GamePanel extends JPanel {
         int pointA = a.x + a.y;
         int pointB = b.x + b.y;
         return (pointA + a.width + a.height / 2) > (pointB + b.height / 2)           &&
-                (pointA + a.height / 2)           < (pointB + b.width + b.height / 2) &&
-                (pointA + a.height + a.width / 2) > (pointB + b.width / 2)            &&
-                (pointA + a.width / 2)            < (pointB + b.height + b.width / 2);
+               (pointA + a.height / 2)           < (pointB + b.width + b.height / 2) &&
+               (pointA + a.height + a.width / 2) > (pointB + b.width / 2)            &&
+               (pointA + a.width / 2)            < (pointB + b.height + b.width / 2);
     }
 
     @Override
