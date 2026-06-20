@@ -44,7 +44,7 @@ public class Character {
         y                    = 0;
         velx                 = 0;
         vely                 = 0;
-        hitbox               = new Rect(100, 100);
+        hitbox               = new Rect(200, 200);
         isInAir              = false;
         isFalling            = false;
         isDucking            = false;

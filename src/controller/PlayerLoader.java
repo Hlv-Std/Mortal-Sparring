@@ -42,13 +42,13 @@ public class PlayerLoader {
                     if (sprite == null)
                         return; // Error loading image from disk
 
-                    BufferedImage scaled = new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB);
+                    BufferedImage scaled = new BufferedImage(300, 200, BufferedImage.TYPE_INT_ARGB);
                     Graphics2D g = scaled.createGraphics();
                     g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
                     if (mirror){
-                        g.drawImage(sprite, 100, 0, -100, 100, null);
+                        g.drawImage(sprite, 200, 0, -200, 200, null);
                     } else {
-                        g.drawImage(sprite, 0, 0, 100, 100, null);
+                        g.drawImage(sprite, 0, 0, 300, 200, null);
                     }
                     g.dispose();
                     frames.put(Integer.parseInt(animationNumber), scaled);

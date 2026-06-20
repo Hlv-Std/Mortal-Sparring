@@ -22,7 +22,7 @@ public class CharacterSelectPanel extends JPanel {
         gameState.setPlayer1(
                 PlayerLoader.loadAnimations(
                         "Helvetica",
-                        "Ken",
+                        "Fazz",
                         false));
 
         gameState.setPlayer2(
